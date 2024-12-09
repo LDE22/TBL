@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TBL.Views.RegistrationPage"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="White">
+    <VerticalStackLayout Padding="20" Spacing="15" VerticalOptions="CenterAndExpand">
+
+        <!-- Серое поле -->
+        <Frame BackgroundColor="Gray" CornerRadius="20" Padding="20" Margin="10">
+            <VerticalStackLayout Spacing="15">
+
+                <Label Text="Регистрация" FontSize="24" TextColor="Black" HorizontalOptions="Center" />
+
+                <!-- Поля ввода с белой обводкой -->
+                <Frame BackgroundColor="Gray" BorderColor="White" CornerRadius="10" Padding="5">
+                    <Entry x:Name="EmailEntry" Placeholder="Электронная почта" TextColor="Black" />
+                </Frame>
+
+                <Frame BackgroundColor="Gray" BorderColor="White" CornerRadius="10" Padding="5">
+                    <Entry x:Name="LoginEntry" Placeholder="Логин" TextColor="Black" />
+                </Frame>
+
+                <Frame BackgroundColor="Gray" BorderColor="White" CornerRadius="10" Padding="5">
+                    <Entry x:Name="PasswordEntry" Placeholder="Пароль" IsPassword="True" TextColor="Black" />
+                </Frame>
+
+                <Frame BackgroundColor="Gray" BorderColor="White" CornerRadius="10" Padding="5">
+                    <Entry x:Name="ConfirmPasswordEntry" Placeholder="Повторите пароль" IsPassword="True" TextColor="Black" />
+                </Frame>
+
+                <!-- Радиокнопки -->
+                <Label Text="Выберите роль:" FontSize="14" HorizontalOptions="Center" />
+                <StackLayout Orientation="Horizontal" Spacing="20" HorizontalOptions="Center">
+                    <RadioButton x:Name="SpecialistRadioButton" Content="Специалист" Value="Specialist" GroupName="RoleGroup"
+                         BackgroundColor="LightGray" BorderColor="Black" BorderWidth="1" CornerRadius="10"
+                         CheckedChanged="OnRoleSelected">
+                        <RadioButton.Triggers>
+                            <DataTrigger TargetType="RadioButton" Binding="{Binding IsChecked}" Value="True">
+                                <Setter Property="BackgroundColor" Value="Black" />
+                                <Setter Property="TextColor" Value="White" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="RadioButton" Binding="{Binding IsChecked}" Value="False">
+                                <Setter Property="BackgroundColor" Value="LightGray" />
+                                <Setter Property="TextColor" Value="Black" />
+                            </DataTrigger>
+                        </RadioButton.Triggers>
+                    </RadioButton>
+                    <RadioButton x:Name="ClientRadioButton" Content="Пользователь" Value="Client" GroupName="RoleGroup"
+                         BackgroundColor="LightGray" BorderColor="Black" BorderWidth="1" CornerRadius="10"
+                         CheckedChanged="OnRoleSelected">
+                        <RadioButton.Triggers>
+                            <DataTrigger TargetType="RadioButton" Binding="{Binding IsChecked}" Value="True">
+                                <Setter Property="BackgroundColor" Value="Black" />
+                                <Setter Property="TextColor" Value="White" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="RadioButton" Binding="{Binding IsChecked}" Value="False">
+                                <Setter Property="BackgroundColor" Value="LightGray" />
+                                <Setter Property="TextColor" Value="Black" />
+                            </DataTrigger>
+                        </RadioButton.Triggers>
+                    </RadioButton>
+                </StackLayout>
+
+                <!-- Кнопка Далее -->
+                <Button x:Name="NextButton" Text="Далее" BackgroundColor="Black" TextColor="White" CornerRadius="10" />
+            </VerticalStackLayout>
+        </Frame>
+
+    </VerticalStackLayout>
+</ContentPage>

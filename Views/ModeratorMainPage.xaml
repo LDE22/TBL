@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TBL.Views.ModeratorMainPage">
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <!-- Заголовок -->
+        <Label Text="TBL staff"
+               FontSize="24"
+               HorizontalOptions="Center"
+               FontAttributes="Bold" />
+
+        <!-- Фото профиля -->
+        <Image Source="{Binding UserPhoto}"
+               HeightRequest="100"
+               WidthRequest="100"
+               HorizontalOptions="Center" />
+
+        <Label Text="Модератор"
+               FontSize="18"
+               HorizontalOptions="Center"
+               FontAttributes="Bold" />
+
+        <!-- Разделительная линия -->
+        <BoxView HeightRequest="1"
+                 BackgroundColor="Black"
+                 HorizontalOptions="FillAndExpand" />
+
+        <!-- Список тикетов -->
+        <CollectionView ItemsSource="{Binding Tickets}" Margin="10,0,10,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="10" Margin="0,5" BorderColor="LightGray" HasShadow="True">
+                        <Grid ColumnDefinitions="70,*,Auto">
+                            <!-- Фото пользователя -->
+                            <Image Source="{Binding UserPhoto}"
+                                   HeightRequest="50"
+                                   WidthRequest="50"
+                                   Clip="Ellipse" />
+
+                            <!-- Информация о тикете -->
+                            <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                <Label Text="{Binding Title}"
+                                       FontSize="16"
+                                       FontAttributes="Bold" />
+                                <Label Text="{Binding Description}" 
+                                       FontSize="14" 
+                                       TextColor="Gray" />
+                            </VerticalStackLayout>
+
+                            <!-- Индикатор статуса -->
+                            <BoxView Grid.Column="2"
+                                     BackgroundColor="Red"
+                                     HeightRequest="15"
+                                     WidthRequest="15"
+                                     VerticalOptions="Center"
+                                     HorizontalOptions="End" />
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
+</ContentPage>

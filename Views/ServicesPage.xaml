@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TBL.Views.ServicesPage"
+             BackgroundColor="White">
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <!-- Заголовок с кнопкой -->
+        <HorizontalStackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+            <Label Text="Мои услуги"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="Black"
+                   VerticalOptions="Center"
+                   HorizontalOptions="StartAndExpand" />
+            <Button Text="+"
+                    BackgroundColor="Black"
+                    TextColor="White"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    FontSize="20"
+                    FontAttributes="Bold"
+                    CornerRadius="20"
+                    VerticalOptions="Center"
+                    HorizontalOptions="End"
+                    Clicked="OnAddServiceClicked" />
+        </HorizontalStackLayout>
+
+        <!-- Список услуг -->
+        <CollectionView x:Name="ServicesList" ItemsSource="{Binding Services}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="10" Margin="5" BorderColor="Gray" CornerRadius="10">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold" TextColor="Black" />
+                            <Label Text="{Binding Price}" FontSize="16" TextColor="Black" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
+</ContentPage>

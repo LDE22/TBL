@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TBL.Views.SpecialistMainPage">
+    <VerticalStackLayout Padding="20" Spacing="15">
+        <Label Text="@link_to_profile" FontSize="18" HorizontalOptions="Center" />
+        <!-- Аватарка -->
+        <Image x:Name="ProfileImage" Source="{Binding Photo}" HeightRequest="100" WidthRequest="100" HorizontalOptions="Center" />
+        <Label Text="Алина" FontSize="24" HorizontalOptions="Center" />
+        <Label Text="Москва" FontSize="16" HorizontalOptions="Center" />
+        <Label Text="Тут какое-то описание (область описания смотрите по границам текста)" FontSize="14" />
+
+        <Label Text="Ваш рейтинг: 4.97" FontSize="16" />
+        <Label Text="Клиентов сегодня: 4" FontSize="16" />
+        <Label Text="Заработано за месяц: 108566 р." FontSize="16" />
+
+        <ListView x:Name="ClientsList" HeightRequest="200">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" Padding="10">
+                            <Image x:Name="ProfileImage" Source="{Binding Photo}" HeightRequest="100" WidthRequest="100" HorizontalOptions="Center" />
+                            <Label Text="{Binding Name}" FontSize="16" VerticalOptions="Center" />
+                            <Label Text="{Binding Time}" FontSize="16" VerticalOptions="Center" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </VerticalStackLayout>
+</ContentPage>

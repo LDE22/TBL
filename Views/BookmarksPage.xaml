@@ -1,0 +1,20 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TBL.Views.BookmarksPage">
+    <VerticalStackLayout Padding="20">
+        <Label Text="Закладки" FontSize="24" HorizontalOptions="Center" />
+
+        <!-- Пример списка закладок с именем для доступа в C# -->
+        <CollectionView x:Name="BookmarksCollectionView">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Orientation="Horizontal" Spacing="10">
+                        <Image Source="{Binding Image}" HeightRequest="50" WidthRequest="50" />
+                        <Label Text="{Binding Name}" VerticalOptions="Center" />
+                        <Label Text="{Binding Description}" VerticalOptions="Center" />
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>
