@@ -11,4 +11,11 @@
             <local:BoolToColorConverter x:Key="BoolToColorConverter" />
         </ResourceDictionary>
     </Application.Resources>
+    <Application.MainPage>
+        <NavigationPage>
+            <x:Arguments>
+                <MainPage />
+            </x:Arguments>
+        </NavigationPage>
+    </Application.MainPage>
 </Application>

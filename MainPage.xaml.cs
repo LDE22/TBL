@@ -1,6 +1,6 @@
 using Microsoft.Maui.Controls;
 
-namespace TBL.Views;
+namespace TBL;
 
 public partial class MainPage : ContentPage
 {

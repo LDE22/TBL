@@ -28,21 +28,13 @@ public partial class ChatsPage : ContentPage
 
         try
         {
-            using (var db = new AppDbContext())
+            using (var db = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
+    .UseNpgsql("Host=your_host;Port=your_port;Database=your_db;Username=your_user;Password=your_password")
+    .Options))
             {
-                var chats = await db.Messages
-                    .Where(m => m.SenderId == CurrentUserId || m.ReceiverId == CurrentUserId)
-                    .GroupBy(m => m.SenderId == CurrentUserId ? m.ReceiverId : m.SenderId)
-                    .Select(g => new ChatModel
-                    {
-                        UserId = g.Key,
-                        LastMessage = g.OrderByDescending(m => m.Timestamp).FirstOrDefault().Content,
-                        LastMessageTime = g.Max(m => m.Timestamp)
-                    })
-                    .ToListAsync();
-
-                ChatsListView.ItemsSource = chats;
+                db.Database.EnsureCreated();
             }
+
         }
         catch (Exception ex)
         {

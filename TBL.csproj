@@ -1,134 +1,68 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
-		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
+  <PropertyGroup>
+    <TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst;net8.0-windows10.0.19041.0</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>TBL</RootNamespace>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
 
-		<!-- Note for MacCatalyst:
-		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
-		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
-		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
-		either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
-		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
+    <!-- Display name -->
+    <ApplicationTitle>TBL</ApplicationTitle>
 
-		<OutputType>Exe</OutputType>
-		<RootNamespace>TBL</RootNamespace>
-		<UseMaui>true</UseMaui>
-		<SingleProject>true</SingleProject>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
+    <!-- App Identifier -->
+    <ApplicationId>com.companyname.tbl</ApplicationId>
 
-		<!-- Display name -->
-		<ApplicationTitle>TBL</ApplicationTitle>
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
 
-		<!-- App Identifier -->
-		<ApplicationId>com.companyname.tbl</ApplicationId>
+    <!-- Supported platforms -->
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+  </PropertyGroup>
 
-		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>1</ApplicationVersion>
+  <!-- Android-specific configurations -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+    <ApplicationId>com.companyname.tbl</ApplicationId>
+    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+    <AndroidUseAapt2>True</AndroidUseAapt2>
+    <AndroidPackageFormat>aab</AndroidPackageFormat>
+  </PropertyGroup>
 
-		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
-		<WindowsPackageType>None</WindowsPackageType>
+  <!-- App assets -->
+  <ItemGroup>
+    <!-- App Icon -->
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
-	</PropertyGroup>
+    <!-- Splash Screen -->
+    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|AnyCPU'">
-	  <ApplicationId>tbl</ApplicationId>
-	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-	  <AndroidUseAapt2>True</AndroidUseAapt2>
-	  <AndroidPackageFormat>aab</AndroidPackageFormat>
-	</PropertyGroup>
+    <!-- Images -->
+    <MauiImage Include="Resources\Images\*" />
+    <MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-ios|AnyCPU'">
-	  <ApplicationId>tbl</ApplicationId>
-	</PropertyGroup>
+    <!-- Custom Fonts -->
+    <MauiFont Include="Resources\Fonts\*" />
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-maccatalyst|AnyCPU'">
-	  <ApplicationId>tbl</ApplicationId>
-	</PropertyGroup>
+    <!-- Raw Assets -->
+    <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-windows10.0.19041.0|AnyCPU'">
-	  <ApplicationId>tbl</ApplicationId>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
-	  <ApplicationId>tbl</ApplicationId>
-	  <AndroidPackageFormat>aab</AndroidPackageFormat>
-	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-	  <AndroidUseAapt2>True</AndroidUseAapt2>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-ios|AnyCPU'">
-	  <ApplicationId>tbl</ApplicationId>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-maccatalyst|AnyCPU'">
-	  <ApplicationId>tbl</ApplicationId>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-windows10.0.19041.0|AnyCPU'">
-	  <ApplicationId>tbl</ApplicationId>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
-
-		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
-
-		<!-- Images -->
-		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
-
-		<!-- Custom Fonts -->
-		<MauiFont Include="Resources\Fonts\*" />
-
-		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiAsset Remove="Resources\Raw\TBLApi.db" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Include="Resources\Raw\TBLApi.db" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		  <PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Update="Properties\Resources.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>Resources.resx</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Update="Properties\Resources.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
-	</ItemGroup>
+  <!-- Dependencies -->
+  <ItemGroup>
+  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0-preview.7.23375.4" />
+  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0-preview.7.23375.4" />
+  <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.0-preview.7.23375.4" />
+  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0-preview.7.23375.4" PrivateAssets="all" />
+  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0-preview.7" />
+  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
+</ItemGroup>
 
 </Project>

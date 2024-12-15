@@ -1,4 +1,5 @@
-using TBL.Data;
+using TBL.Models;
+using Newtonsoft.Json;
 using Microsoft.Maui.Controls;
 
 namespace TBL.Views;
@@ -12,28 +13,22 @@ public partial class LoginPage : ContentPage
 
     private async void OnLoginButtonClicked(object sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(LoginEntry.Text) || string.IsNullOrWhiteSpace(PasswordEntry.Text))
+        using (var httpClient = new HttpClient())
         {
-            await DisplayAlert("Ошибка", "Введите логин и пароль.", "OK");
-            return;
-        }
-        using (var db = new AppDbContext())
-        {
-            var user = db.Users.FirstOrDefault(u => u.Username == LoginEntry.Text && u.Password == PasswordEntry.Text);
-            if (user == null)
+            var result = await httpClient.GetAsync("http://<ваш-сервер>/api/users");
+            if (result.IsSuccessStatusCode)
             {
-                await DisplayAlert("Ошибка", "Неверный логин или пароль.", "OK");
-                return;
+                var json = await result.Content.ReadAsStringAsync();
+                var users = JsonConvert.DeserializeObject<List<User>>(json);
+
+                var user = users.FirstOrDefault(u => u.Username == LoginEntry.Text && u.Password == PasswordEntry.Text);
+                if (user != null)
+                {
+                    Application.Current.MainPage = new SpecialistAppShell();
+                }
             }
-
-            // Сохраняем роль пользователя
-            Preferences.Set("UserRole", user.Role);
-
-            // Переход в зависимости от роли
-            (Application.Current as App)?.NavigateToRoleBasedPage(user.Role);
         }
     }
-
     private async void OnForgotPasswordClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new RepairPassPage());

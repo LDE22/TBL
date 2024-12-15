@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TBL.Data;
 using TBL.Models;
 
@@ -20,25 +21,12 @@ public partial class RegistrationPage : ContentPage
             return;
         }
 
-        using (var db = new AppDbContext())
+        using (var db = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
+            .UseNpgsql("Host=your_host;Port=your_port;Database=your_database;Username=your_user;Password=your_password")
+            .Options))
         {
-            var userExists = db.Users.Any(u => u.Username == UsernameEntry.Text || u.Email == EmailEntry.Text);
-            if (userExists)
-            {
-                await DisplayAlert("Ошибка", "Пользователь с таким логином или email уже существует.", "OK");
-                return;
-            }
-
-            db.Users.Add(new User
-            {
-                Username = UsernameEntry.Text,
-                Password = PasswordEntry.Text,
-                Email = EmailEntry.Text,
-                Role = _selectedRole
-            });
-            await db.SaveChangesAsync();
+            db.Database.EnsureCreated();
         }
-
         await DisplayAlert("Успех", "Регистрация завершена.", "OK");
         await Navigation.PopToRootAsync();
     }
