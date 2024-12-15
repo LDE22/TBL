@@ -2,44 +2,25 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TBL.Views.ChatPage"
-             BackgroundColor="White">
-    <Grid RowDefinitions="*,Auto" Padding="20">
-
-        <!-- Сообщения -->
-        <CollectionView Grid.Row="0" ItemsSource="{Binding Messages}" VerticalOptions="FillAndExpand">
+             Title="Чат">
+    <VerticalStackLayout Padding="10" Spacing="10">
+        <!-- Список сообщений -->
+        <CollectionView x:Name="MessagesListView" 
+                        ItemsSource="{Binding Messages}" 
+                        SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <StackLayout Margin="5">
-                        <!-- Сообщения от пользователя -->
-                        <Frame BackgroundColor="{Binding IsSentByMe, Converter={StaticResource BoolToColorConverter}}"
-                               Padding="10"
-                               CornerRadius="10"
-                               HasShadow="False"
-                               HorizontalOptions="{Binding IsSentByMe, Converter={StaticResource BoolToAlignmentConverter}}">
-                            <Label Text="{Binding Text}" FontSize="14" TextColor="Black" />
-                        </Frame>
-                    </StackLayout>
+                    <Frame Padding="5" Margin="5" CornerRadius="10" BackgroundColor="{Binding IsOutgoing, Converter={StaticResource BoolToColorConverter}}">
+                        <Label Text="{Binding Content}" TextColor="White" />
+                    </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- Поле ввода сообщения -->
-        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="0,10,0,0">
-            <Frame BackgroundColor="#f9f9f9" CornerRadius="20" Padding="10,5">
-                <Entry Placeholder="Введите сообщение..." 
-                       Text="{Binding NewMessageText}" 
-                       FontSize="14"
-                       BackgroundColor="White"
-                       TextColor="Black"/>
-            </Frame>
-            <Button Text="Отправить" 
-                    BackgroundColor="#007AFF" 
-                    TextColor="White"
-                    FontSize="14"
-                    Command="{Binding SendMessageCommand}" 
-                    WidthRequest="80"
-                    HorizontalOptions="End" />
-        </Grid>
-
-    </Grid>
+        <!-- Ввод сообщения -->
+        <HorizontalStackLayout>
+            <Entry x:Name="NewMessageEntry" Placeholder="Введите сообщение" HorizontalOptions="FillAndExpand" />
+            <Button Text="Отправить" Clicked="OnSendMessageClicked" />
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
 </ContentPage>

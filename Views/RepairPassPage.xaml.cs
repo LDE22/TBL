@@ -1,4 +1,5 @@
 using Microsoft.Maui.Controls;
+using TBL.Models;
 using TBL.Data;
 
 namespace TBL.Views
@@ -24,7 +25,7 @@ namespace TBL.Views
                     return;
                 }
 
-                var user = UserData.Users.FirstOrDefault(u => u.Login == emailOrLogin || u.Email == emailOrLogin); // Проверьте добавление Email в модель User
+                var user = UserData.Users.FirstOrDefault(u => u.Username == emailOrLogin || u.Email == emailOrLogin); // Проверьте добавление Email в модель User
 
                 if (user == null)
                 {
@@ -53,7 +54,7 @@ namespace TBL.Views
                 }
 
                 // Обновляем пароль (заменяем на подходящий метод сохранения)
-                var user = UserData.Users.FirstOrDefault(u => u.Login == EmailEntry.Text || u.Email == EmailEntry.Text);
+                var user = UserData.Users.FirstOrDefault(u => u.Username == EmailEntry.Text || u.Email == EmailEntry.Text);
                 if (user != null)
                 {
                     user.Password = newPassword;

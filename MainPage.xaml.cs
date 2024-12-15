@@ -15,14 +15,11 @@ public partial class MainPage : ContentPage
 
     private async void OnLoginButtonClicked(object sender, EventArgs e)
     {
-        // Переход на страницу входа
         await Navigation.PushAsync(new LoginPage());
     }
 
     private async void OnRegistrationButtonClicked(object sender, EventArgs e)
     {
-        // Переход на страницу регистрации
         await Navigation.PushAsync(new RegistrationPage());
     }
-
 }

@@ -1,44 +1,73 @@
+using TBL.Data;
 using Microsoft.Maui.Controls;
+using Microsoft.EntityFrameworkCore;
 
 namespace TBL.Views;
 
 public partial class ChatsPage : ContentPage
 {
+    public int CurrentUserId { get; set; }
+
     public ChatsPage()
     {
         InitializeComponent();
-        BindingContext = new ChatsPageViewModel();
+        LoadChats();
     }
 
-    private async void OnChatSelected(object sender, SelectionChangedEventArgs e)
+    public ChatsPage(int currentUserId)
     {
-        if (e.CurrentSelection.FirstOrDefault() is Chat selectedChat)
+        InitializeComponent();
+        CurrentUserId = currentUserId;
+        LoadChats();
+    }
+
+    private async void LoadChats()
+    {
+        LoadingIndicator.IsVisible = true;
+        LoadingIndicator.IsRunning = true;
+
+        try
         {
-            // Переход в выбранный чат
-            await Navigation.PushAsync(new ChatPage(selectedChat.UserName));
+            using (var db = new AppDbContext())
+            {
+                var chats = await db.Messages
+                    .Where(m => m.SenderId == CurrentUserId || m.ReceiverId == CurrentUserId)
+                    .GroupBy(m => m.SenderId == CurrentUserId ? m.ReceiverId : m.SenderId)
+                    .Select(g => new ChatModel
+                    {
+                        UserId = g.Key,
+                        LastMessage = g.OrderByDescending(m => m.Timestamp).FirstOrDefault().Content,
+                        LastMessageTime = g.Max(m => m.Timestamp)
+                    })
+                    .ToListAsync();
+
+                ChatsListView.ItemsSource = chats;
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ошибка", $"Не удалось загрузить чаты: {ex.Message}", "OK");
+        }
+        finally
+        {
+            LoadingIndicator.IsVisible = false;
+            LoadingIndicator.IsRunning = false;
+        }
+    }
+
+    private async void OnChatSelected(object sender, SelectedItemChangedEventArgs e)
+    {
+        var chat = e.SelectedItem as ChatModel;
+        if (chat != null)
+        {
+            await Navigation.PushAsync(new ChatPage(CurrentUserId, chat.UserId));
         }
     }
 }
 
-public class Chat
+public class ChatModel
 {
-    public string UserName { get; set; }
-    public string UserPhoto { get; set; }
+    public int UserId { get; set; }
     public string LastMessage { get; set; }
-    public string LastMessageTime { get; set; }
-}
-
-public class ChatsPageViewModel
-{
-    public List<Chat> Chats { get; set; }
-
-    public ChatsPageViewModel()
-    {
-        Chats = new List<Chat>
-        {
-            new Chat { UserName = "Алина", UserPhoto = "user1.png", LastMessage = "Привет!", LastMessageTime = "10:45" },
-            new Chat { UserName = "Света", UserPhoto = "user2.png", LastMessage = "Когда встреча?", LastMessageTime = "Вчера" },
-            new Chat { UserName = "Олег", UserPhoto = "user3.png", LastMessage = "Спасибо за помощь", LastMessageTime = "На прошлой неделе" }
-        };
-    }
+    public DateTime LastMessageTime { get; set; }
 }

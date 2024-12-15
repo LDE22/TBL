@@ -12,9 +12,14 @@ namespace TBL.Views
             // Сбрасываем данные пользователя
             BindingContext = null;
             Preferences.Remove("UserRole");
-
-            // Переход на страницу входа
-            Application.Current.MainPage = new NavigationPage(new MainPage());
+            if (Application.Current?.Windows?.Count > 0)
+            {
+                Application.Current.Windows[0].Page = new NavigationPage(new MainPage());
+            }
+            else
+            {
+                Console.WriteLine("Ошибка: Application.Current.Windows не содержит окон.");
+            }
         }
     }
 }

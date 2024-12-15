@@ -1,4 +1,5 @@
 using TBL.Data; // Подключаем пространство имён для UserData
+using TBL.Models;
 namespace TBL.Views;
 
 public partial class SpecialistProfilePage : ContentPage

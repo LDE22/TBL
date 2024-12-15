@@ -1,4 +1,6 @@
+using TBL.Data;
 using TBL.Views;
+using Microsoft.EntityFrameworkCore;
 
 namespace TBL;
 
@@ -8,28 +10,40 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        // Обёртка MainPage в NavigationPage
-        MainPage = new NavigationPage(new MainPage());
+        // Инициализация базы данных
+        using (var db = new AppDbContext())
+        {
+            db.Database.EnsureCreated();
+            if (db.Database.GetPendingMigrations().Any())
+            {
+                db.Database.Migrate();
+            }
+        }
     }
 
-public void NavigateToRoleBasedPage(string role)
+    protected override Window CreateWindow(IActivationState activationState)
     {
-        // Переключение на страницу, основанную на роли пользователя
+        return new Window(new NavigationPage(new MainPage()));
+    }
+
+
+    public void NavigateToRoleBasedPage(string role)
+    {
+        // Переход на страницу в зависимости от роли
         switch (role)
         {
             case "Client":
-                MainPage = new ClientAppShell(); // Shell для клиента
+                Current.MainPage = new ClientAppShell();
                 break;
             case "Specialist":
-                MainPage = new SpecialistAppShell(); // Shell для специалиста
+                Current.MainPage = new SpecialistAppShell();
                 break;
             case "Moderator":
-                MainPage = new ModeratorAppShell(); // Shell для модератора
+                Current.MainPage = new ModeratorAppShell();
                 break;
             default:
-                MainPage = new NavigationPage(new MainPage());
+                Current.MainPage = new NavigationPage(new MainPage());
                 break;
         }
     }
 }
-

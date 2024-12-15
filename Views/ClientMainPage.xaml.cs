@@ -1,6 +1,7 @@
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 using TBL.Data; // Подключаем пространство имён для UserData
+using TBL.Models;
 
 namespace TBL.Views;
 

@@ -2,8 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TBL.Views.LoginPage"
-             NavigationPage.HasNavigationBar="False"
              BackgroundColor="White">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsVisible="True" />
+    </Shell.BackButtonBehavior>
     <VerticalStackLayout Padding="20" Spacing="15" VerticalOptions="CenterAndExpand">
 
         <!-- Заголовок -->
@@ -24,7 +26,7 @@
 
                 <!-- Кнопка Войти -->
                 <Button x:Name="LoginButton" Text="Войти" BackgroundColor="White" TextColor="Black" CornerRadius="20"
-                        HorizontalOptions="Center" WidthRequest="150" />
+                        HorizontalOptions="Center" WidthRequest="150" Clicked="OnLoginButtonClicked"/>
                 
             </VerticalStackLayout>
         </Frame>

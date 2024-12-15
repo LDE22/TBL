@@ -1,47 +1,64 @@
-using System.Collections.ObjectModel;
-using System.Windows.Input;
+using TBL.Data;
 using Microsoft.Maui.Controls;
 
 namespace TBL.Views;
 
 public partial class ChatPage : ContentPage
 {
-    public ChatPage(string chatWith)
+    public int CurrentUserId { get; set; }
+    public int OtherUserId { get; set; }
+
+    public ChatPage()
     {
         InitializeComponent();
-        BindingContext = new ChatPageViewModel(chatWith);
-    }
-}
-
-public class Message
-{
-    public string Text { get; set; }
-    public bool IsSentByMe { get; set; }
-}
-
-public class ChatPageViewModel
-{
-    public ObservableCollection<Message> Messages { get; set; }
-    public string NewMessageText { get; set; }
-    public ICommand SendMessageCommand { get; }
-
-    public ChatPageViewModel(string chatWith)
-    {
-        Messages = new ObservableCollection<Message>
-        {
-            new Message { Text = "Привет!", IsSentByMe = false },
-            new Message { Text = "Как дела?", IsSentByMe = true }
-        };
-
-        SendMessageCommand = new Command(SendMessage);
+        LoadMessages();
     }
 
-    private void SendMessage()
+    public ChatPage(int currentUserId, int otherUserId)
     {
-        if (!string.IsNullOrWhiteSpace(NewMessageText))
+        InitializeComponent();
+        CurrentUserId = currentUserId;
+        OtherUserId = otherUserId;
+
+        LoadMessages();
+    }
+
+    private void LoadMessages()
+    {
+        using (var db = new AppDbContext())
         {
-            Messages.Add(new Message { Text = NewMessageText, IsSentByMe = true });
-            NewMessageText = string.Empty;
+            var messages = db.Messages
+                .Where(m => (m.SenderId == CurrentUserId && m.ReceiverId == OtherUserId) ||
+                            (m.SenderId == OtherUserId && m.ReceiverId == CurrentUserId))
+                .OrderBy(m => m.Timestamp)
+                .ToList();
+
+            MessagesListView.ItemsSource = messages;
         }
+    }
+
+    private async void OnSendMessageClicked(object sender, EventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(NewMessageEntry.Text))
+        {
+            await DisplayAlert("Ошибка", "Введите сообщение.", "OK");
+            return;
+        }
+
+        using (var db = new AppDbContext())
+        {
+            db.Messages.Add(new Models.Message
+            {
+                Content = NewMessageEntry.Text,
+                SenderId = CurrentUserId,
+                ReceiverId = OtherUserId,
+                Timestamp = DateTime.UtcNow
+            });
+
+            await db.SaveChangesAsync();
+        }
+
+        NewMessageEntry.Text = string.Empty;
+        LoadMessages();
     }
 }

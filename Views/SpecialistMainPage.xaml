@@ -4,28 +4,36 @@
              x:Class="TBL.Views.SpecialistMainPage">
     <VerticalStackLayout Padding="20" Spacing="15">
         <Label Text="@link_to_profile" FontSize="18" HorizontalOptions="Center" />
-        <!-- Аватарка -->
-        <Image x:Name="ProfileImage" Source="{Binding Photo}" HeightRequest="100" WidthRequest="100" HorizontalOptions="Center" />
-        <Label Text="Алина" FontSize="24" HorizontalOptions="Center" />
-        <Label Text="Москва" FontSize="16" HorizontalOptions="Center" />
-        <Label Text="Тут какое-то описание (область описания смотрите по границам текста)" FontSize="14" />
-
+        <!-- Аватарка специалиста -->
+        <Image Source="{Binding Specialist.Photo}" HeightRequest="100" WidthRequest="100" HorizontalOptions="Center" />
+        <Label Text="{Binding Specialist.Name}" FontSize="24" HorizontalOptions="Center" />
+        <Label Text="{Binding Specialist.City}" FontSize="16" HorizontalOptions="Center" />
+        <Label Text="{Binding Specialist.Description}" FontSize="14" />
+        
         <Label Text="Ваш рейтинг: 4.97" FontSize="16" />
         <Label Text="Клиентов сегодня: 4" FontSize="16" />
         <Label Text="Заработано за месяц: 108566 р." FontSize="16" />
 
-        <ListView x:Name="ClientsList" HeightRequest="200">
-            <ListView.ItemTemplate>
+        <!-- Список заказов -->
+        <CollectionView ItemsSource="{Binding Orders}">
+            <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <ViewCell>
-                        <StackLayout Orientation="Horizontal" Padding="10">
-                            <Image x:Name="ProfileImage" Source="{Binding Photo}" HeightRequest="100" WidthRequest="100" HorizontalOptions="Center" />
-                            <Label Text="{Binding Name}" FontSize="16" VerticalOptions="Center" />
-                            <Label Text="{Binding Time}" FontSize="16" VerticalOptions="Center" />
-                        </StackLayout>
-                    </ViewCell>
+                    <Frame Padding="10" Margin="5" BorderColor="LightGray" CornerRadius="10">
+                        <Grid ColumnDefinitions="70,*,Auto">
+                            <!-- Фото клиента -->
+                            <Image Source="{Binding Photo}" HeightRequest="50" WidthRequest="50" Clip="Ellipse" />
+
+                            <!-- Информация о заказе -->
+                            <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                <Label Text="{Binding ClientName}" FontSize="16" FontAttributes="Bold" />
+                                <Label Text="{Binding Date, StringFormat='Дата: {0:dd.MM.yyyy}'}" />
+                                <Label Text="{Binding Time, StringFormat='Время: {0}'}" />
+                                <Label Text="{Binding ServiceType}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </VerticalStackLayout>
 </ContentPage>
