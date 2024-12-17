@@ -1,6 +1,7 @@
 using Microsoft.Maui.Controls;
+using TBL.Views;
 
-namespace TBL.Views;
+namespace TBL;
 
 public partial class MainPage : ContentPage
 {
@@ -15,8 +16,11 @@ public partial class MainPage : ContentPage
 
     private async void OnLoginButtonClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new LoginPage());
+        // Получаем экземпляр LoginPage из контейнера DI
+        var loginPage = App.Current.Handler.MauiContext.Services.GetRequiredService<LoginPage>();
+        await Navigation.PushAsync(loginPage);
     }
+
 
     private async void OnRegistrationButtonClicked(object sender, EventArgs e)
     {

@@ -1,13 +1,15 @@
-using TBL.Data;
-using Microsoft.Maui.Controls;
+using TBL.Services;
 
 namespace TBL.Views;
 
 public partial class LoginPage : ContentPage
 {
-    public LoginPage()
+    private readonly ApiService _apiService;
+
+    public LoginPage(ApiService apiService)
     {
         InitializeComponent();
+        _apiService = apiService;
     }
 
     private async void OnLoginButtonClicked(object sender, EventArgs e)
@@ -17,23 +19,34 @@ public partial class LoginPage : ContentPage
             await DisplayAlert("Ошибка", "Введите логин и пароль.", "OK");
             return;
         }
-        using (var db = new AppDbContext())
+
+        var user = await _apiService.LoginAsync(LoginEntry.Text, PasswordEntry.Text);
+
+        if (user != null)
         {
-            var user = db.Users.FirstOrDefault(u => u.Username == LoginEntry.Text && u.Password == PasswordEntry.Text);
-            if (user == null)
+            await DisplayAlert("Успех", "Вы вошли в систему.", "OK");
+
+            switch (user.Role)
             {
-                await DisplayAlert("Ошибка", "Неверный логин или пароль.", "OK");
-                return;
+                case "Specialist":
+                    Application.Current.MainPage = new SpecialistAppShell();
+                    break;
+                case "Client":
+                    Application.Current.MainPage = new ClientAppShell();
+                    break;
+                case "Moderator":
+                    Application.Current.MainPage = new ModeratorAppShell();
+                    break;
+                default:
+                    await DisplayAlert("Ошибка", "Неизвестная роль.", "OK");
+                    break;
             }
-
-            // Сохраняем роль пользователя
-            Preferences.Set("UserRole", user.Role);
-
-            // Переход в зависимости от роли
-            (Application.Current as App)?.NavigateToRoleBasedPage(user.Role);
+        }
+        else
+        {
+            await DisplayAlert("Ошибка", "Неверный логин или пароль.", "OK");
         }
     }
-
     private async void OnForgotPasswordClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new RepairPassPage());

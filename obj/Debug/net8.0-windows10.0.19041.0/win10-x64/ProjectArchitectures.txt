@@ -1,0 +1,1 @@
+C:\PRODJ\TBL\TBL.csproj;x64

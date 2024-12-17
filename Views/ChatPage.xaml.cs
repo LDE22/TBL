@@ -1,5 +1,6 @@
 using TBL.Data;
 using Microsoft.Maui.Controls;
+using Microsoft.EntityFrameworkCore;
 
 namespace TBL.Views;
 
@@ -25,16 +26,13 @@ public partial class ChatPage : ContentPage
 
     private void LoadMessages()
     {
-        using (var db = new AppDbContext())
+        using (var db = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
+    .UseNpgsql("Host=junction.proxy.rlwy.net;Port=47042;Database=railway;Username=postgres;Password=PuYeMbjdgtRkBbqeQvkfXThbgaBNNWAr")
+    .Options))
         {
-            var messages = db.Messages
-                .Where(m => (m.SenderId == CurrentUserId && m.ReceiverId == OtherUserId) ||
-                            (m.SenderId == OtherUserId && m.ReceiverId == CurrentUserId))
-                .OrderBy(m => m.Timestamp)
-                .ToList();
-
-            MessagesListView.ItemsSource = messages;
+            db.Database.EnsureCreated();
         }
+
     }
 
     private async void OnSendMessageClicked(object sender, EventArgs e)
@@ -45,18 +43,13 @@ public partial class ChatPage : ContentPage
             return;
         }
 
-        using (var db = new AppDbContext())
+        using (var db = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
+    .UseNpgsql("Host= junction.proxy.rlwy.net;Port=47042;Database=railway;Username= postgres;Password = PuYeMbjdgtRkBbqeQvkfXThbgaBNNWAr;Ssl Mode=Require;Trust Server Certificate=true;")
+    .Options))
         {
-            db.Messages.Add(new Models.Message
-            {
-                Content = NewMessageEntry.Text,
-                SenderId = CurrentUserId,
-                ReceiverId = OtherUserId,
-                Timestamp = DateTime.UtcNow
-            });
-
-            await db.SaveChangesAsync();
+            db.Database.EnsureCreated();
         }
+
 
         NewMessageEntry.Text = string.Empty;
         LoadMessages();
