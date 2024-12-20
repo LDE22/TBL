@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TBL")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+ce98830eca8a1a0057530be3721197d7b5cb2079")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+2f3025be0a3edc03e1f35733aba595394ff73068")]
 [assembly: System.Reflection.AssemblyProductAttribute("TBL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TBL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

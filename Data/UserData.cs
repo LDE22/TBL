@@ -249,7 +249,7 @@ namespace TBL.Data
         public async Task SendPasswordResetRequestAsync(string email)
         {
             var payload = new { Email = email };
-            var response = await _client.PostAsJsonAsync("Users/request-password-reset", payload);
+            var response = await _client.PostAsJsonAsync("Users/send-password-reset", payload);
             response.EnsureSuccessStatusCode();
         }
 

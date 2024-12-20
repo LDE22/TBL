@@ -7,6 +7,10 @@
       "RelativeMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|solutionrelative:data\\userdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|c:\\prodj\\tbl\\views\\repairpasspage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|solutionrelative:views\\repairpasspage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|c:\\prodj\\tbl\\views\\mnpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|solutionrelative:views\\mnpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
@@ -22,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,20 +38,33 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RepairPassPage.xaml.cs",
+              "DocumentMoniker": "C:\\PRODJ\\TBL\\Views\\RepairPassPage.xaml.cs",
+              "RelativeDocumentMoniker": "Views\\RepairPassPage.xaml.cs",
+              "ToolTip": "C:\\PRODJ\\TBL\\Views\\RepairPassPage.xaml.cs",
+              "RelativeToolTip": "Views\\RepairPassPage.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-20T18:01:08.388Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "UserData.cs",
               "DocumentMoniker": "C:\\PRODJ\\TBL\\Data\\UserData.cs",
               "RelativeDocumentMoniker": "Data\\UserData.cs",
               "ToolTip": "C:\\PRODJ\\TBL\\Data\\UserData.cs",
               "RelativeToolTip": "Data\\UserData.cs",
-              "ViewState": "AgIAACsAAAAAAAAAAAAkwD0AAAAPAAAAAAAAAA==",
+              "ViewState": "AgIAAOoAAAAAAAAAAAAAAP4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-20T17:19:36.147Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "MnPage.xaml",
               "DocumentMoniker": "C:\\PRODJ\\TBL\\Views\\MnPage.xaml",
               "RelativeDocumentMoniker": "Views\\MnPage.xaml",
@@ -55,12 +72,11 @@
               "RelativeToolTip": "Views\\MnPage.xaml",
               "ViewState": "AgIAAB0AAAAAAAAAAAAAADAAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-20T16:57:11.637Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-20T16:57:11.637Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "MnPage.xaml.cs",
               "DocumentMoniker": "C:\\PRODJ\\TBL\\Views\\MnPage.xaml.cs",
               "RelativeDocumentMoniker": "Views\\MnPage.xaml.cs",
@@ -68,8 +84,7 @@
               "RelativeToolTip": "Views\\MnPage.xaml.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-20T16:36:55.405Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-20T16:36:55.405Z"
             }
           ]
         }
