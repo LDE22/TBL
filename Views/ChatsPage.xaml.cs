@@ -1,65 +1,68 @@
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using TBL.Models;
 using TBL.Data;
-using Microsoft.Maui.Controls;
-using Microsoft.EntityFrameworkCore;
 
-namespace TBL.Views;
-
-public partial class ChatsPage : ContentPage
+namespace TBL.Views
 {
-    public int CurrentUserId { get; set; }
-
-    public ChatsPage()
+    public partial class ChatsPage : ContentPage, INotifyPropertyChanged
     {
-        InitializeComponent();
-        LoadChats();
-    }
+        private readonly UserData _userData;
+        private ObservableCollection<ChatPreview> _chats = new();
 
-    public ChatsPage(int currentUserId)
-    {
-        InitializeComponent();
-        CurrentUserId = currentUserId;
-        LoadChats();
-    }
-
-    private async void LoadChats()
-    {
-        LoadingIndicator.IsVisible = true;
-        LoadingIndicator.IsRunning = true;
-
-        try
+        public ObservableCollection<ChatPreview> Chats
         {
-            using (var db = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
-    .UseNpgsql("Host=junction.proxy.rlwy.net;Port=47042;Database=railway;Username=postgres;Password=PuYeMbjdgtRkBbqeQvkfXThbgaBNNWAr")
-    .Options))
+            get => _chats;
+            set
             {
-                db.Database.EnsureCreated();
+                _chats = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(HasChats));
+                OnPropertyChanged(nameof(NoChats));
             }
+        }
 
-        }
-        catch (Exception ex)
+        public bool HasChats => Chats.Count > 0;
+        public bool NoChats => Chats.Count == 0;
+
+        public ChatsPage()
         {
-            await DisplayAlert("Ошибка", $"Не удалось загрузить чаты: {ex.Message}", "OK");
+            InitializeComponent();
+            _userData = new UserData(new HttpClient());
+            BindingContext = this;
+            LoadChatsAsync();
         }
-        finally
+
+        private async void LoadChatsAsync()
         {
-            LoadingIndicator.IsVisible = false;
-            LoadingIndicator.IsRunning = false;
+            try
+            {
+                var chatModels = await _userData.GetChatsAsync(Preferences.Get("UserId", 0));
+                Chats.Clear();
+                foreach (var chat in chatModels)
+                {
+                    Chats.Add(chat);
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Ошибка", $"Не удалось загрузить чаты: {ex.Message}", "ОК");
+            }
+        }
+
+        private async void OnChatSelected(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.CurrentSelection.FirstOrDefault() is ChatPreview selectedChat)
+            {
+                await Navigation.PushAsync(new ChatPage(selectedChat.ChatId, selectedChat.TargetUserId));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-
-    private async void OnChatSelected(object sender, SelectedItemChangedEventArgs e)
-    {
-        var chat = e.SelectedItem as ChatModel;
-        if (chat != null)
-        {
-            await Navigation.PushAsync(new ChatPage(CurrentUserId, chat.UserId));
-        }
-    }
-}
-
-public class ChatModel
-{
-    public int UserId { get; set; }
-    public string LastMessage { get; set; }
-    public DateTime LastMessageTime { get; set; }
 }

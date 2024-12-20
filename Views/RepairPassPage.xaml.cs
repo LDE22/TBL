@@ -1,67 +1,38 @@
-using Microsoft.Maui.Controls;
-using TBL.Models;
 using TBL.Data;
+using TBL.Models;
 
-namespace TBL.Views
+namespace TBL.Views;
+
+public partial class RepairPassPage : ContentPage
 {
-    public partial class RepairPassPage : ContentPage
-    {
-        private bool _isStepTwo = false; // Контролируем шаги
+    private readonly UserData _userData;
+    private bool _isStepTwo = false;
+    private User _currentUser;
 
-        public RepairPassPage()
+    public RepairPassPage(UserData userData)
+    {
+        InitializeComponent();
+        _userData = userData;
+    }
+
+    private async void OnActionButtonClicked(object sender, EventArgs e)
+    {
+        var email = EmailEntry.Text;
+
+        if (string.IsNullOrWhiteSpace(email))
         {
-            InitializeComponent();
+            await DisplayAlert("Ошибка", "Введите email.", "OK");
+            return;
         }
 
-        private async void OnActionButtonClicked(object sender, EventArgs e)
+        try
         {
-            if (!_isStepTwo)
-            {
-                // Проверка почты или логина
-                string emailOrLogin = EmailEntry.Text?.Trim();
-                if (string.IsNullOrWhiteSpace(emailOrLogin))
-                {
-                    await DisplayAlert("Ошибка", "Введите почту или логин.", "OK");
-                    return;
-                }
-
-                var user = UserData.Users.FirstOrDefault(u => u.Username == emailOrLogin || u.Email == emailOrLogin); // Проверьте добавление Email в модель User
-
-                if (user == null)
-                {
-                    await DisplayAlert("Ошибка", "Пользователь с таким логином или почтой не найден.", "OK");
-                    return;
-                }
-
-                // Переключаемся на второй шаг
-                _isStepTwo = true;
-                InstructionLabel.Text = "Введите новый пароль";
-                EmailEntry.IsVisible = false;
-                NewPasswordEntry.IsVisible = true;
-                ConfirmPasswordEntry.IsVisible = true;
-                ActionButton.Text = "Сохранить";
-            }
-            else
-            {
-                // Обработка нового пароля
-                string newPassword = NewPasswordEntry.Text?.Trim();
-                string confirmPassword = ConfirmPasswordEntry.Text?.Trim();
-
-                if (string.IsNullOrWhiteSpace(newPassword) || newPassword != confirmPassword)
-                {
-                    await DisplayAlert("Ошибка", "Пароли не совпадают или не заполнены.", "OK");
-                    return;
-                }
-
-                // Обновляем пароль (заменяем на подходящий метод сохранения)
-                var user = UserData.Users.FirstOrDefault(u => u.Username == EmailEntry.Text || u.Email == EmailEntry.Text);
-                if (user != null)
-                {
-                    user.Password = newPassword;
-                    await DisplayAlert("Успех", "Пароль успешно изменён.", "OK");
-                    await Navigation.PopAsync(); // Возвращаемся на предыдущую страницу
-                }
-            }
+            await _userData.SendPasswordResetRequestAsync(email);
+            await DisplayAlert("Успех", "На вашу почту отправлены инструкции по восстановлению пароля.", "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ошибка", $"Не удалось отправить запрос: {ex.Message}", "OK");
         }
     }
 }

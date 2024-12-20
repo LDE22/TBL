@@ -1,26 +1,22 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TBL.Views.ChatPage"
              Title="Чат">
-    <VerticalStackLayout Padding="10" Spacing="10">
-        <!-- Список сообщений -->
-        <CollectionView x:Name="MessagesListView" 
-                        ItemsSource="{Binding Messages}" 
-                        SelectionMode="None">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Padding="5" Margin="5" CornerRadius="10" BackgroundColor="{Binding IsOutgoing, Converter={StaticResource BoolToColorConverter}}">
-                        <Label Text="{Binding Content}" TextColor="White" />
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-
-        <!-- Ввод сообщения -->
-        <HorizontalStackLayout>
-            <Entry x:Name="NewMessageEntry" Placeholder="Введите сообщение" HorizontalOptions="FillAndExpand" />
-            <Button Text="Отправить" Clicked="OnSendMessageClicked" />
-        </HorizontalStackLayout>
-    </VerticalStackLayout>
+    <ContentPage.Content>
+        <StackLayout Padding="10" Spacing="5">
+            <CollectionView x:Name="MessagesCollectionView" ItemsSource="{Binding Messages}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BackgroundColor="LightGray" Margin="5" Padding="10" CornerRadius="10">
+                            <Label Text="{Binding Content}" />
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <StackLayout Orientation="Horizontal" Spacing="5">
+                <Entry x:Name="MessageEntry" Placeholder="Введите сообщение" HorizontalOptions="FillAndExpand" />
+                <Button Text="Отправить" Clicked="OnSendMessageClicked" />
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

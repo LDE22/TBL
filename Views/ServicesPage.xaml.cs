@@ -1,36 +1,112 @@
-using Microsoft.Maui.Controls;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using TBL.Data;
+using TBL.Models;
+using System.Windows.Input;
 
-namespace TBL.Views;
-
-public partial class ServicesPage : ContentPage
+namespace TBL.Views
 {
-    public ObservableCollection<Service> Services { get; set; }
-
-    public ServicesPage()
+    public partial class ServicesPage : ContentPage
     {
-        InitializeComponent();
+        private readonly UserData _userData;
+        public ObservableCollection<Service> Services { get; set; } = new ObservableCollection<Service>();
 
-        // Пример данных для списка услуг
-        Services = new ObservableCollection<Service>
+        public ICommand EditServiceCommand { get; }
+        public ICommand DeleteServiceCommand { get; }
+
+        public ServicesPage(UserData userData)
         {
-            new Service { Name = "Маникюр", Price = "2000 р." },
-            new Service { Name = "Брови", Price = "1500 р." }
-        };
+            InitializeComponent();
+            if (userData == null) throw new ArgumentNullException(nameof(userData));
+            _userData = userData;
+            EditServiceCommand = new Command<Service>(async service => await EditService(service));
+            DeleteServiceCommand = new Command<Service>(async service => await DeleteService(service));
 
-        BindingContext = this;
-    }
+            BindingContext = this;
+        }
 
-    // Обработчик для кнопки добавления услуги
-    private async void OnAddServiceClicked(object sender, EventArgs e)
-    {
-        // Логика добавления новой услуги
-        await DisplayAlert("Добавление услуги", "Открыть форму для добавления новой услуги", "OK");
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+
+            try
+            {
+                LoadingIndicator.IsRunning = true;
+                LoadingIndicator.IsVisible = true;
+
+                await LoadServicesAsync();
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Ошибка", $"Ошибка при загрузке: {ex.Message}", "ОК");
+            }
+            finally
+            {
+                LoadingIndicator.IsRunning = false;
+                LoadingIndicator.IsVisible = false;
+            }
+        }
+
+        private async Task LoadServicesAsync()
+        {
+            try
+            {
+                var services = await _userData.GetServicesBySpecialistAsync(Preferences.Get("UserId", 0));
+
+                if (services == null || !services.Any())
+                {
+                    EmptyServicesLabel.IsVisible = true;
+                    ServicesCollectionView.IsVisible = false;
+                }
+                else
+                {
+                    EmptyServicesLabel.IsVisible = false;
+                    ServicesCollectionView.IsVisible = true;
+
+                    Services.Clear();
+                    foreach (var service in services)
+                    {
+                        Services.Add(service);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Ошибка", $"Ошибка при загрузке услуг: {ex.Message}", "ОК");
+            }
+        }
+
+        private async Task EditService(Service service)
+        {
+            if (service == null) return;
+
+            await Navigation.PushAsync(new EditAddServicePage(_userData, service));
+        }
+
+        private async void OnAddServiceClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new EditAddServicePage(_userData));
+        }
+
+
+        private async Task DeleteService(Service service)
+        {
+            if (service == null) return;
+
+            var confirm = await DisplayAlert("Подтверждение", $"Вы уверены, что хотите удалить услугу \"{service.Title}\"?", "Да", "Нет");
+            if (!confirm) return;
+
+            try
+            {
+                await _userData.DeleteServiceAsync(service.Id);
+                Services.Remove(service);
+                await DisplayAlert("Успех", "Услуга успешно удалена.", "ОК");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Ошибка", $"Не удалось удалить услугу: {ex.Message}", "ОК");
+            }
+        }
     }
 }
 
-public class Service
-{
-    public string Name { get; set; }
-    public string Price { get; set; }
-}

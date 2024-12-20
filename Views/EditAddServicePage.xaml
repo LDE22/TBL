@@ -1,0 +1,30 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TBL.Views.EditAddServicePage"
+             Title="Услуга">
+    <VerticalStackLayout Padding="20">
+
+        <!-- Поле для ввода названия -->
+        <Entry x:Name="ServiceTitleEntry"
+               Placeholder="Введите название услуги"
+               FontSize="16" />
+
+        <!-- Поле для ввода описания -->
+        <Editor x:Name="ServiceDescriptionEditor"
+                Placeholder="Введите описание услуги"
+                FontSize="16"
+                AutoSize="TextChanges" />
+
+        <!-- Поле для ввода цены -->
+        <Entry x:Name="ServicePriceEntry"
+               Placeholder="Введите цену"
+               Keyboard="Numeric"
+               FontSize="16" />
+
+        <!-- Кнопка сохранения -->
+        <Button x:Name="SaveButton"
+                Text="Сохранить"
+                Clicked="OnSaveButtonClicked" />
+
+    </VerticalStackLayout>
+</ContentPage>

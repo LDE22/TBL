@@ -1,7 +1,20 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\PRODJ\\TBL\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|c:\\prodj\\tbl\\views\\mnpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|solutionrelative:views\\mnpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|c:\\prodj\\tbl\\views\\mnpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|solutionrelative:views\\mnpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|c:\\prodj\\tbl\\data\\userdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|solutionrelative:data\\userdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -18,6 +31,45 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UserData.cs",
+              "DocumentMoniker": "C:\\PRODJ\\TBL\\Data\\UserData.cs",
+              "RelativeDocumentMoniker": "Data\\UserData.cs",
+              "ToolTip": "C:\\PRODJ\\TBL\\Data\\UserData.cs",
+              "RelativeToolTip": "Data\\UserData.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAQwBQAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-20T17:19:36.147Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MnPage.xaml",
+              "DocumentMoniker": "C:\\PRODJ\\TBL\\Views\\MnPage.xaml",
+              "RelativeDocumentMoniker": "Views\\MnPage.xaml",
+              "ToolTip": "C:\\PRODJ\\TBL\\Views\\MnPage.xaml",
+              "RelativeToolTip": "Views\\MnPage.xaml",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAAADAAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-20T16:57:11.637Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MnPage.xaml.cs",
+              "DocumentMoniker": "C:\\PRODJ\\TBL\\Views\\MnPage.xaml.cs",
+              "RelativeDocumentMoniker": "Views\\MnPage.xaml.cs",
+              "ToolTip": "C:\\PRODJ\\TBL\\Views\\MnPage.xaml.cs",
+              "RelativeToolTip": "Views\\MnPage.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-20T16:36:55.405Z",
+              "EditorCaption": ""
             }
           ]
         }

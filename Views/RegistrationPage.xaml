@@ -62,20 +62,6 @@
                             </DataTrigger>
                         </RadioButton.Triggers>
                     </RadioButton>
-                    <RadioButton x:Name="ModeratorRadioButton" Content="Модератор" Value="Moderator" GroupName="RoleGroup"
-                         BackgroundColor="LightGray" BorderColor="Black" BorderWidth="1" CornerRadius="10"
-                         CheckedChanged="OnRoleSelected">
-                        <RadioButton.Triggers>
-                            <DataTrigger TargetType="RadioButton" Binding="{Binding IsChecked}" Value="True">
-                                <Setter Property="BackgroundColor" Value="Black" />
-                                <Setter Property="TextColor" Value="White" />
-                            </DataTrigger>
-                            <DataTrigger TargetType="RadioButton" Binding="{Binding IsChecked}" Value="False">
-                                <Setter Property="BackgroundColor" Value="LightGray" />
-                                <Setter Property="TextColor" Value="Black" />
-                            </DataTrigger>
-                        </RadioButton.Triggers>
-                    </RadioButton>
                 </StackLayout>
 
                 <!-- Кнопка Далее -->

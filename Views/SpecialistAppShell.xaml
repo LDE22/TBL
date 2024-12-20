@@ -5,13 +5,13 @@
        x:Class="TBL.Views.SpecialistAppShell"
        FlyoutBehavior="Flyout">
     <FlyoutItem Title="Главная">
-        <ShellContent ContentTemplate="{DataTemplate views:SpecialistMainPage}" />
+        <ShellContent ContentTemplate="{DataTemplate views:MnPage}" />
     </FlyoutItem>
     <FlyoutItem Title="Чат">
         <ShellContent ContentTemplate="{DataTemplate views:ChatsPage}" />
     </FlyoutItem>
     <FlyoutItem Title="Редактирование Профиля">
-        <ShellContent ContentTemplate="{DataTemplate views:SpecialistProfilePage}" />
+        <ShellContent ContentTemplate="{DataTemplate views:Profile}" />
     </FlyoutItem>
     <FlyoutItem Title="Мои услуги">
         <ShellContent ContentTemplate="{DataTemplate views:ServicesPage}" />
@@ -20,7 +20,7 @@
         <ShellContent ContentTemplate="{DataTemplate views:ReviewsPage}" />
     </FlyoutItem>
     <FlyoutItem Title="График">
-        <ShellContent ContentTemplate="{DataTemplate views:SchedulePage}" />
+        <ShellContent ContentTemplate="{DataTemplate views:EditSchedulePage}" />
     </FlyoutItem>
     <MenuItem Text="Выход" Clicked="OnLogoutClicked" />
 </Shell>

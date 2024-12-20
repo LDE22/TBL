@@ -5,13 +5,13 @@
        x:Class="TBL.Views.ModeratorAppShell"
        FlyoutBehavior="Flyout">
     <FlyoutItem Title="Главная">
-        <ShellContent ContentTemplate="{DataTemplate views:ModeratorMainPage}" />
+        <ShellContent ContentTemplate="{DataTemplate views:MnPage}" />
     </FlyoutItem>
     <FlyoutItem Title="Чат">
         <ShellContent ContentTemplate="{DataTemplate views:ChatsPage}" />
     </FlyoutItem>
     <FlyoutItem Title="Редактирование Профиля">
-        <ShellContent ContentTemplate="{DataTemplate views:ModeratorProfilePage}" />
+        <ShellContent ContentTemplate="{DataTemplate views:Profile}" />
     </FlyoutItem>
     <FlyoutItem Title="Статистика">
         <ShellContent ContentTemplate="{DataTemplate views:StatisticsPage}" />

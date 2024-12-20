@@ -1,0 +1,16 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TBL.Views.BookingPage">
+    <VerticalStackLayout Padding="20" Spacing="15">
+        <Label Text="Запись на услугу" FontSize="24" HorizontalOptions="Center" />
+
+        <Picker x:Name="DayPicker" Title="Выберите день" />
+        <CollectionView x:Name="AvailableTimesCollectionView">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Button Text="{Binding}" Clicked="OnTimeSlotSelected" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>

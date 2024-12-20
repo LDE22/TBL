@@ -1,81 +1,131 @@
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
+using System.Text.RegularExpressions; // Для регулярных выражений
+using Microsoft.Maui.Controls;
 using TBL.Models;
+using TBL.Data;
 
-namespace TBL.Views;
-
-public partial class RegistrationPage : ContentPage
+namespace TBL.Views
 {
-    private string _selectedRole;
-    private readonly HttpClient _httpClient;
-
-    public RegistrationPage()
+    public partial class RegistrationPage : ContentPage
     {
-        InitializeComponent();
-        // Инициализация HttpClient
-        _httpClient = new HttpClient
-        {
-            BaseAddress = new Uri("https://tblapi-production.up.railway.app/")
-        };
-        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-    }
+        private readonly UserData _userData;
+        private string _selectedRole;
 
-    private async void OnNextButtonClicked(object sender, EventArgs e)
-    {
-        // Проверка на заполнение
-        if (string.IsNullOrWhiteSpace(UsernameEntry.Text) ||
-            string.IsNullOrWhiteSpace(PasswordEntry.Text) ||
-            string.IsNullOrWhiteSpace(EmailEntry.Text) || _selectedRole == null)
+        public RegistrationPage(UserData userData)
         {
-            await DisplayAlert("Ошибка", "Заполните все поля!", "OK");
-            return;
+            InitializeComponent();
+            _userData = new UserData(new HttpClient { BaseAddress = new Uri("https://localhost:5000/api/") });
         }
 
-        if (PasswordEntry.Text != ConfirmPasswordEntry.Text)
+        private async void OnNextButtonClicked(object sender, EventArgs e)
         {
-            await DisplayAlert("Ошибка", "Пароли не совпадают!", "OK");
-            return;
-        }
+            // Отключаем кнопку для предотвращения многократных нажатий
+            NextButton.IsEnabled = false;
 
-        // Создание пользователя
-        var newUser = new User
-        {
-            Username = UsernameEntry.Text,
-            Password = PasswordEntry.Text,
-            Email = EmailEntry.Text,
-            Role = _selectedRole
-        };
-
-        try
-        {
-            var json = JsonConvert.SerializeObject(newUser);
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync("api/users/register", content);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                await DisplayAlert("Успех", "Пользователь зарегистрирован!", "OK");
+                string username = UsernameEntry.Text?.Trim();
+                string email = EmailEntry.Text?.Trim();
+                string password = PasswordEntry.Text?.Trim();
+
+                // Проверка на пустые поля
+                if (string.IsNullOrWhiteSpace(username) ||
+                    string.IsNullOrWhiteSpace(email) ||
+                    string.IsNullOrWhiteSpace(password))
+                {
+                    await DisplayAlert("Ошибка", "Все поля должны быть заполнены.", "OK");
+                    return;
+                }
+
+                // Проверка на выбор роли
+                if (string.IsNullOrWhiteSpace(_selectedRole))
+                {
+                    await DisplayAlert("Ошибка", "Необходимо выбрать роль пользователя.", "OK");
+                    return;
+                }
+
+                // Проверка формата email
+                if (!IsValidEmail(email))
+                {
+                    await DisplayAlert("Ошибка", "Некорректный формат Email.", "OK");
+                    return;
+                }
+
+                // Проверка на корректный username
+                if (!IsValidUsername(username))
+                {
+                    await DisplayAlert("Ошибка", "Имя пользователя должно содержать минимум 3 символа и состоять только из букв и цифр.", "OK");
+                    return;
+                }
+
+                // Проверка пароля
+                if (!IsValidPassword(password))
+                {
+                    await DisplayAlert("Ошибка", "Пароль должен содержать минимум 6 символов, включая хотя бы одну букву и одну цифру.", "OK");
+                    return;
+                }
+
+                // Проверяем, существует ли пользователь
+                var existingUsers = await _userData.GetUsersAsync();
+                if (existingUsers.Any(u => u.Username == username || u.Email == email))
+                {
+                    await DisplayAlert("Ошибка", "Пользователь с таким логином или почтой уже существует.", "OK");
+                    return;
+                }
+
+                // Создаём нового пользователя
+                var newUser = new User
+                {
+                    Username = username,
+                    Email = email,
+                    Password = password,
+                    Role = _selectedRole
+                };
+
+                await _userData.AddUserAsync(newUser);
+                await DisplayAlert("Успех", "Пользователь зарегистрирован.", "OK");
+
+                // Переход на страницу входа
                 await Navigation.PopAsync();
             }
-            else
+            catch (Exception ex)
             {
-                var error = await response.Content.ReadAsStringAsync();
-                await DisplayAlert("Ошибка", error, "OK");
+                await DisplayAlert("Ошибка", $"Что-то пошло не так: {ex.Message}", "OK");
+            }
+            finally
+            {
+                // Возвращаем кнопку в рабочее состояние
+                NextButton.IsEnabled = true;
             }
         }
-        catch (Exception ex)
-        {
-            await DisplayAlert("Ошибка", $"Не удалось подключиться: {ex.Message}", "OK");
-        }
-    }
 
-    private void OnRoleSelected(object sender, CheckedChangedEventArgs e)
-    {
-        if (e.Value)
+        private void OnRoleSelected(object sender, CheckedChangedEventArgs e)
         {
-            var radioButton = sender as RadioButton;
-            _selectedRole = radioButton?.Value?.ToString();
+            if (e.Value)
+            {
+                var radioButton = sender as RadioButton;
+                _selectedRole = radioButton?.Value?.ToString();
+            }
+        }
+
+        // Проверка формата email
+        private bool IsValidEmail(string email)
+        {
+            var emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            return Regex.IsMatch(email, emailPattern);
+        }
+
+        // Проверка формата username
+        private bool IsValidUsername(string username)
+        {
+            var usernamePattern = @"^[a-zA-Z0-9]{3,}$";
+            return Regex.IsMatch(username, usernamePattern);
+        }
+
+        // Проверка формата пароля
+        private bool IsValidPassword(string password)
+        {
+            var passwordPattern = @"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$";
+            return Regex.IsMatch(password, passwordPattern);
         }
     }
 }

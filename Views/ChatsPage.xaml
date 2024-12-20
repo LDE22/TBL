@@ -1,20 +1,34 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TBL.Views.ChatsPage">
-    <VerticalStackLayout>
-        <!-- Индикатор загрузки -->
-        <ActivityIndicator x:Name="LoadingIndicator" IsVisible="False" IsRunning="False" />
+             x:Class="TBL.Views.ChatsPage"
+             Title="Чаты">
+    <ContentPage.Content>
+        <Grid>
+            <!-- Коллекция чатов -->
+            <CollectionView x:Name="ChatsCollectionView"
+                            ItemsSource="{Binding Chats}"
+                            SelectionMode="Single"
+                            SelectionChanged="OnChatSelected"
+                            IsVisible="{Binding HasChats}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="5" BackgroundColor="White" CornerRadius="10" BorderColor="Gray">
+                            <StackLayout>
+                                <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="18" />
+                                <Label Text="{Binding LastMessage}" FontSize="14" TextColor="Gray" />
+                                <Label Text="{Binding Timestamp, StringFormat='{0:dd.MM.yyyy HH:mm}'}" FontSize="Small" VerticalOptions="Center" TextColor="Gray" />
+                            </StackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-        <!-- Ваш список чатов -->
-        <CollectionView x:Name="ChatsList" SelectionMode="Single" SelectionChanged="OnChatSelected">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Padding="10" Margin="5" BorderColor="Gray" CornerRadius="10">
-                        <Label Text="{Binding LastMessage}" />
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </VerticalStackLayout>
+            <!-- Сообщение "Нет чатов" -->
+            <Label Text="Нет чатов"
+                   FontSize="24"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   IsVisible="{Binding NoChats}" />
+        </Grid>
+    </ContentPage.Content>
 </ContentPage>

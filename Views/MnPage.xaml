@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TBL.Views.MnPage"
+             Title="Главная">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+            <ActivityIndicator x:Name="LoadingIndicator"
+                   IsVisible="False"
+                   IsRunning="False"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center" />
+
+
+            <!-- Клиентский интерфейс -->
+            <ContentView x:Name="ClientContent" IsVisible="False">
+                <VerticalStackLayout Spacing="10">
+                    <Image Source="{Binding PhotoBase64}" 
+                           HeightRequest="100" 
+                           WidthRequest="100" 
+                           Aspect="AspectFill" 
+                           HorizontalOptions="Center" 
+                           Margin="0,10" />
+                    <Label Text="{Binding Name}" FontSize="24" HorizontalOptions="Center" FontAttributes="Bold" />
+                    <Label Text="{Binding City}" FontSize="16" HorizontalOptions="Center" />
+                    <!-- Поле поиска -->
+                    <SearchBar x:Name="SearchBar" 
+                   Placeholder="Введите название услуги" 
+                   TextChanged="OnSearchTextChanged" />
+
+                    <!-- Список результатов -->
+                    <Label x:Name="NoResultsLabel"
+                        Text="Услуги не найдены"
+                        FontSize="18"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        IsVisible="False" />
+                    <CollectionView x:Name="SearchResultsCollectionView" ItemsSource="{Binding SearchResults}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Padding="10" Margin="5" BorderColor="Gray" CornerRadius="10">
+                                    <VerticalStackLayout>
+                                        <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold" />
+                                        <Label Text="{Binding Description}" FontSize="14" TextColor="Gray" />
+                                        <Label Text="{Binding Price, StringFormat='{}{0:C}'}" FontSize="16" TextColor="Green" />
+                                        <Label Text="{Binding City}" FontSize="14" TextColor="Gray" />
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Label Text="Встречи" FontSize="20" FontAttributes="Bold" />
+                    <Label Text="Нет событий" FontSize="16" TextColor="Gray" />
+                </VerticalStackLayout>
+            </ContentView>
+
+            <!-- Модераторский интерфейс -->
+            <ContentView x:Name="ModeratorContent" IsVisible="False">
+                <VerticalStackLayout Spacing="10">
+                    <Image Source="{Binding PhotoBase64}" 
+                           HeightRequest="100" 
+                           WidthRequest="100" 
+                           Aspect="AspectFill" 
+                           HorizontalOptions="Center" />
+                    <Label Text="{Binding Name}" FontSize="18" HorizontalOptions="Center" />
+                    <CollectionView ItemsSource="{Binding Tickets}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Margin="5">
+                                    <VerticalStackLayout>
+                                        <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold" />
+                                        <Label Text="{Binding Description}" FontSize="14" />
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </ContentView>
+
+            <!-- Специалистский интерфейс -->
+            <ContentView x:Name="SpecialistContent" IsVisible="False">
+                <VerticalStackLayout>
+                    <Image Source="{Binding PhotoBase64}" 
+                           HeightRequest="100" 
+                           WidthRequest="100" 
+                           Aspect="AspectFill" 
+                           HorizontalOptions="Center" />
+                    <Label Text="{Binding Name}" FontSize="18" HorizontalOptions="Center" />
+                    <Label Text="{Binding City}" FontSize="16" HorizontalOptions="Center" />
+                    <Label Text="Ваши заказы" FontSize="24" FontAttributes="Bold" />
+                    <ListView ItemsSource="{Binding Orders}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Padding="10">
+                                        <Label Text="{Binding ClientName}" FontAttributes="Bold" />
+                                        <Label Text="{Binding ServiceType}" />
+                                        <Label Text="{Binding Date}" />
+                                        <Label Text="{Binding Time}" />
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </VerticalStackLayout>
+            </ContentView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

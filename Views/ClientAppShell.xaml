@@ -5,13 +5,13 @@
        x:Class="TBL.Views.ClientAppShell"
        FlyoutBehavior="Flyout">
     <FlyoutItem Title="Главная">
-        <ShellContent ContentTemplate="{DataTemplate views:ClientMainPage}" />
+        <ShellContent ContentTemplate="{DataTemplate views:MnPage}" />
     </FlyoutItem>
     <FlyoutItem Title="Чат">
         <ShellContent ContentTemplate="{DataTemplate views:ChatsPage}" />
     </FlyoutItem>
     <FlyoutItem Title="Редактирование Профиля">
-        <ShellContent ContentTemplate="{DataTemplate views:ClientProfilePage}" />
+        <ShellContent ContentTemplate="{DataTemplate views:Profile}" />
     </FlyoutItem>
     <FlyoutItem Title="Закладки">
         <ShellContent ContentTemplate="{DataTemplate views:BookmarksPage}" />

@@ -1,57 +1,65 @@
+using System.Collections.ObjectModel;
 using TBL.Data;
-using Microsoft.Maui.Controls;
-using Microsoft.EntityFrameworkCore;
+using TBL.Models;
 
-namespace TBL.Views;
-
-public partial class ChatPage : ContentPage
+namespace TBL.Views
 {
-    public int CurrentUserId { get; set; }
-    public int OtherUserId { get; set; }
-
-    public ChatPage()
+    public partial class ChatPage : ContentPage
     {
-        InitializeComponent();
-        LoadMessages();
-    }
+        private readonly UserData _userData;
+        private int currentUserId;
+        private int chatUserId;
 
-    public ChatPage(int currentUserId, int otherUserId)
-    {
-        InitializeComponent();
-        CurrentUserId = currentUserId;
-        OtherUserId = otherUserId;
+        public ObservableCollection<Message> Messages { get; set; } = new ObservableCollection<Message>();
 
-        LoadMessages();
-    }
-
-    private void LoadMessages()
-    {
-        using (var db = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
-    .UseNpgsql("Host=junction.proxy.rlwy.net;Port=47042;Database=railway;Username=postgres;Password=PuYeMbjdgtRkBbqeQvkfXThbgaBNNWAr")
-    .Options))
+        public ChatPage(int loggedInUserId, int targetUserId)
         {
-            db.Database.EnsureCreated();
+            InitializeComponent();
+            _userData = new UserData(new HttpClient());
+            currentUserId = loggedInUserId;
+            chatUserId = targetUserId;
+            BindingContext = this;
+
+            LoadMessagesAsync();
         }
 
-    }
-
-    private async void OnSendMessageClicked(object sender, EventArgs e)
-    {
-        if (string.IsNullOrWhiteSpace(NewMessageEntry.Text))
+        private async void LoadMessagesAsync()
         {
-            await DisplayAlert("Ошибка", "Введите сообщение.", "OK");
-            return;
+            try
+            {
+                var messages = await _userData.GetMessagesAsync(currentUserId, chatUserId);
+                Messages.Clear();
+                foreach (var message in messages)
+                {
+                    Messages.Add(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Ошибка", $"Не удалось загрузить сообщения: {ex.Message}", "ОК");
+            }
         }
 
-        using (var db = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
-    .UseNpgsql("Host= junction.proxy.rlwy.net;Port=47042;Database=railway;Username= postgres;Password = PuYeMbjdgtRkBbqeQvkfXThbgaBNNWAr;Ssl Mode=Require;Trust Server Certificate=true;")
-    .Options))
+        private async void OnSendMessageClicked(object sender, EventArgs e)
         {
-            db.Database.EnsureCreated();
+            try
+            {
+                var message = new Message
+                {
+                    SenderId = currentUserId,
+                    ReceiverId = chatUserId,
+                    Content = MessageEntry.Text,
+                    Timestamp = DateTime.UtcNow
+                };
+
+                await _userData.SendMessageAsync(message);
+                Messages.Add(message);
+                MessageEntry.Text = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Ошибка", $"Не удалось отправить сообщение: {ex.Message}", "ОК");
+            }
         }
-
-
-        NewMessageEntry.Text = string.Empty;
-        LoadMessages();
     }
 }

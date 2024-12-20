@@ -1,29 +1,25 @@
-using Microsoft.Maui.Controls;
+using TBL.Data;
 using TBL.Views;
 
 namespace TBL;
 
 public partial class MainPage : ContentPage
 {
-    public MainPage()
+    private readonly UserData _userData;
+
+    public MainPage(UserData userData)
     {
         InitializeComponent();
+        _userData = userData;
+    }
 
-        // Привязываем действия к кнопкам
-        RegistrationButton.Clicked += OnRegistrationButtonClicked;
-        LoginButton.Clicked += OnLoginButtonClicked;
+    private async void OnRegistrationButtonClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new RegistrationPage(_userData));
     }
 
     private async void OnLoginButtonClicked(object sender, EventArgs e)
     {
-        // Получаем экземпляр LoginPage из контейнера DI
-        var loginPage = App.Current.Handler.MauiContext.Services.GetRequiredService<LoginPage>();
-        await Navigation.PushAsync(loginPage);
-    }
-
-
-    private async void OnRegistrationButtonClicked(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new RegistrationPage());
+        await Navigation.PushAsync(new LoginPage(_userData));
     }
 }

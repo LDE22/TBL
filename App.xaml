@@ -1,12 +1,17 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:TBL.Converters"
+             xmlns:converters="clr-namespace:TBL.Converters"
              x:Class="TBL.App">
     <Application.Resources>
         <ResourceDictionary>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <Color x:Key="Primary">#FFFFFF</Color>
             <Color x:Key="Secondary">#FFD700</Color>
+            <Color x:Key="AppPrimaryColor">#ffbafd</Color>
+            <Color x:Key="AppBackgroundColor">AliceBlue</Color>
+            <Color x:Key="PrimaryColor">Black</Color>
+            <Color x:Key="SecondaryColor">White</Color>
+            <Color x:Key="TertiaryColor">Silver</Color>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

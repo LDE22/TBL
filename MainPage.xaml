@@ -17,14 +17,16 @@
                     Text="Регистрация" 
                     BackgroundColor="Black" 
                     TextColor="White" 
-                    CornerRadius="10" />
+                    CornerRadius="10" 
+                     Clicked="OnRegistrationButtonClicked"/>
             <Button x:Name="LoginButton" 
                     Text="Вход" 
                     BackgroundColor="White" 
                     TextColor="Black" 
                     BorderColor="Black" 
                     BorderWidth="2" 
-                    CornerRadius="10" />
+                    CornerRadius="10" 
+                     Clicked="OnLoginButtonClicked"/>
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

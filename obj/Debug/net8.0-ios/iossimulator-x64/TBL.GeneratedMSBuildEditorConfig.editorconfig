@@ -42,6 +42,12 @@ build_metadata.AdditionalFiles.ManifestResourceName = TBL.Resources.Styles.Style
 build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Styles.xaml
 build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Styles.xaml
 
+[C:/PRODJ/TBL/Views/BookingPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.BookingPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\BookingPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\BookingPage.xaml
+
 [C:/PRODJ/TBL/Views/BookmarksPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.BookmarksPage.xaml
@@ -66,17 +72,11 @@ build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.ClientAppShell.x
 build_metadata.AdditionalFiles.TargetPath = Views\ClientAppShell.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\ClientAppShell.xaml
 
-[C:/PRODJ/TBL/Views/ClientMainPage.xaml]
+[C:/PRODJ/TBL/Views/EditAddServicePage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
-build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.ClientMainPage.xaml
-build_metadata.AdditionalFiles.TargetPath = Views\ClientMainPage.xaml
-build_metadata.AdditionalFiles.RelativePath = Views\ClientMainPage.xaml
-
-[C:/PRODJ/TBL/Views/ClientProfilePage.xaml]
-build_metadata.AdditionalFiles.GenKind = Xaml
-build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.ClientProfilePage.xaml
-build_metadata.AdditionalFiles.TargetPath = Views\ClientProfilePage.xaml
-build_metadata.AdditionalFiles.RelativePath = Views\ClientProfilePage.xaml
+build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.EditAddServicePage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\EditAddServicePage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\EditAddServicePage.xaml
 
 [C:/PRODJ/TBL/Views/LoginPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
@@ -84,29 +84,23 @@ build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.LoginPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Views\LoginPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\LoginPage.xaml
 
+[C:/PRODJ/TBL/Views/MnPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.MnPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\MnPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\MnPage.xaml
+
 [C:/PRODJ/TBL/Views/ModeratorAppShell.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.ModeratorAppShell.xaml
 build_metadata.AdditionalFiles.TargetPath = Views\ModeratorAppShell.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\ModeratorAppShell.xaml
 
-[C:/PRODJ/TBL/Views/ModeratorMainPage.xaml]
+[C:/PRODJ/TBL/Views/Profile.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
-build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.ModeratorMainPage.xaml
-build_metadata.AdditionalFiles.TargetPath = Views\ModeratorMainPage.xaml
-build_metadata.AdditionalFiles.RelativePath = Views\ModeratorMainPage.xaml
-
-[C:/PRODJ/TBL/Views/ModeratorPage.xaml]
-build_metadata.AdditionalFiles.GenKind = Xaml
-build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.ModeratorPage.xaml
-build_metadata.AdditionalFiles.TargetPath = Views\ModeratorPage.xaml
-build_metadata.AdditionalFiles.RelativePath = Views\ModeratorPage.xaml
-
-[C:/PRODJ/TBL/Views/ModeratorProfilePage.xaml]
-build_metadata.AdditionalFiles.GenKind = Xaml
-build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.ModeratorProfilePage.xaml
-build_metadata.AdditionalFiles.TargetPath = Views\ModeratorProfilePage.xaml
-build_metadata.AdditionalFiles.RelativePath = Views\ModeratorProfilePage.xaml
+build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.Profile.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\Profile.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\Profile.xaml
 
 [C:/PRODJ/TBL/Views/RegistrationPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
@@ -144,26 +138,8 @@ build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.SpecialistAppShe
 build_metadata.AdditionalFiles.TargetPath = Views\SpecialistAppShell.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\SpecialistAppShell.xaml
 
-[C:/PRODJ/TBL/Views/SpecialistMainPage.xaml]
-build_metadata.AdditionalFiles.GenKind = Xaml
-build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.SpecialistMainPage.xaml
-build_metadata.AdditionalFiles.TargetPath = Views\SpecialistMainPage.xaml
-build_metadata.AdditionalFiles.RelativePath = Views\SpecialistMainPage.xaml
-
-[C:/PRODJ/TBL/Views/SpecialistProfilePage.xaml]
-build_metadata.AdditionalFiles.GenKind = Xaml
-build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.SpecialistProfilePage.xaml
-build_metadata.AdditionalFiles.TargetPath = Views\SpecialistProfilePage.xaml
-build_metadata.AdditionalFiles.RelativePath = Views\SpecialistProfilePage.xaml
-
 [C:/PRODJ/TBL/Views/StatisticsPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.StatisticsPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Views\StatisticsPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\StatisticsPage.xaml
-
-[C:/PRODJ/TBL/Views/UnauthorizedPage.xaml]
-build_metadata.AdditionalFiles.GenKind = Xaml
-build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.UnauthorizedPage.xaml
-build_metadata.AdditionalFiles.TargetPath = Views\UnauthorizedPage.xaml
-build_metadata.AdditionalFiles.RelativePath = Views\UnauthorizedPage.xaml

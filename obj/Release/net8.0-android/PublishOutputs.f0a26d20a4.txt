@@ -1,0 +1,3 @@
+C:\PRODJ\TBL\bin\Release\net8.0-android\publish\com.companyname.tbl-Signed.apk
+C:\PRODJ\TBL\bin\Release\net8.0-android\publish\com.companyname.tbl.apk
+C:\PRODJ\TBL\bin\Release\net8.0-android\publish\_Microsoft.Android.Resource.Designer.dll
