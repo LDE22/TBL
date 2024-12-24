@@ -1,22 +1,23 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TBL.Views.EditSchedulePage">
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15">
-            <Label Text="Изменение графика" FontSize="24" HorizontalOptions="Center" />
+             x:Class="TBL.Views.EditSchedulePage"
+             Title="Редактирование расписания">
 
-            <CollectionView x:Name="ScheduleCollectionView">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout Padding="10" Orientation="Horizontal">
-                            <Label Text="{Binding Day}" FontSize="18" VerticalOptions="Center" />
-                            <Entry Text="{Binding WorkingHours}" Placeholder="Часы работы (например, 10:00 - 19:00)" HorizontalOptions="FillAndExpand" />
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+    <VerticalStackLayout Padding="20" Spacing="15">
+        <CollectionView x:Name="ScheduleCollectionView" ItemsSource="{Binding ScheduleList}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Padding="10" Orientation="Horizontal" Spacing="10">
+                        <DatePicker Date="{Binding Day}" />
+                        <TimePicker Time="{Binding StartTime}" />
+                        <TimePicker Time="{Binding EndTime}" />
+                        <Button Text="Удалить" Clicked="OnDeleteClicked" CommandParameter="{Binding .}" />
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
-            <Button Text="Сохранить изменения" Clicked="OnSaveScheduleClicked" />
-        </VerticalStackLayout>
-    </ScrollView>
+        <Button Text="Добавить запись" Clicked="OnAddScheduleClicked" />
+        <Button Text="Сохранить изменения" Clicked="OnSaveScheduleClicked" />
+    </VerticalStackLayout>
 </ContentPage>

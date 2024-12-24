@@ -13,8 +13,8 @@
     <FlyoutItem Title="Редактирование Профиля">
         <ShellContent ContentTemplate="{DataTemplate views:Profile}" />
     </FlyoutItem>
-    <FlyoutItem Title="Закладки">
-        <ShellContent ContentTemplate="{DataTemplate views:BookmarksPage}" />
+    <FlyoutItem Title="Избранное">
+        <ShellContent Route="BookmarksPage" ContentTemplate="{DataTemplate views:BookmarksPage}" />
     </FlyoutItem>
     <MenuItem Text="Выход" Clicked="OnLogoutClicked" />
 </Shell>

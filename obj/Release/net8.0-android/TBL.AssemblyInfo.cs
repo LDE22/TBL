@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TBL")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+ce98830eca8a1a0057530be3721197d7b5cb2079")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+41e3a8d8028bcbc0b5a5b1a75608df5f04e6a1a9")]
 [assembly: System.Reflection.AssemblyProductAttribute("TBL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TBL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

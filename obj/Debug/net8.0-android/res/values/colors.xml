@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="splash_screen_background">#606060</color> <!-- Серый фон -->
-    <color name="colorPrimary">#303030</color>            <!-- Тёмно-серый -->
-    <color name="colorAccent">#E0E0E0</color>             <!-- Светло-серый -->
-    <color name="colorText">#FFFFFF</color>               <!-- Белый цвет -->
-</resources>

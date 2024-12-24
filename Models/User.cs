@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 
 namespace TBL.Models
@@ -38,6 +39,10 @@ namespace TBL.Models
         // Реализация INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public List<Review> Reviews { get; set; } = new List<Review>(); // Инициализировано пустым списком
+
+        public List<Favorite> Favorites { get; set; } = new List<Favorite>();
+
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -53,19 +58,9 @@ namespace TBL.Models
 
         // Тикеты для модератора
         public List<Ticket> Tickets { get; set; } = new List<Ticket>();
-    }
 
-    public class Meeting
-    {
-        public string ClientName { get; set; }
-        public string ServiceType { get; set; }
-        public string Time { get; set; }
-        public string ClientPhoto { get; set; }
-    }
-
-    public class Ticket
-    {
-        public string Title { get; set; }
-        public string Description { get; set; }
+        public double Latitude { get; set; } // Добавлено
+        public double Longitude { get; set; } // Добавлено
+        public string Address { get; set; }
     }
 }

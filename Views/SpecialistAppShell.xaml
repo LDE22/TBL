@@ -16,9 +16,9 @@
     <FlyoutItem Title="Мои услуги">
         <ShellContent ContentTemplate="{DataTemplate views:ServicesPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="Отзывы">
+   <!-- <FlyoutItem Title="Отзывы">
         <ShellContent ContentTemplate="{DataTemplate views:ReviewsPage}" />
-    </FlyoutItem>
+    </FlyoutItem> -->
     <FlyoutItem Title="График">
         <ShellContent ContentTemplate="{DataTemplate views:EditSchedulePage}" />
     </FlyoutItem>

@@ -17,6 +17,8 @@
           "Microsoft.Extensions.Logging.Debug": "8.0.1",
           "Microsoft.Maui.Controls": "8.0.83",
           "Microsoft.Maui.Controls.Compatibility": "8.0.83",
+          "Microsoft.Maui.Controls.Maps": "9.0.21",
+          "Microsoft.Maui.Essentials": "9.0.21",
           "Newtonsoft.Json": "13.0.3",
           "Npgsql": "9.0.2",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.2",
@@ -420,14 +422,6 @@
           }
         }
       },
-      "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
-        "runtime": {
-          "lib/net6.0/Microsoft.IO.RecyclableMemoryStream.dll": {
-            "assemblyVersion": "3.0.1.0",
-            "fileVersion": "3.0.1.0"
-          }
-        }
-      },
       "Microsoft.Maui.Controls/8.0.83": {
         "dependencies": {
           "Microsoft.Maui.Controls.Build.Tasks": "8.0.83",
@@ -575,6 +569,17 @@
           }
         }
       },
+      "Microsoft.Maui.Controls.Maps/9.0.21": {
+        "dependencies": {
+          "Microsoft.Maui.Maps": "9.0.21"
+        },
+        "runtime": {
+          "lib/netstandard2.1/Microsoft.Maui.Controls.Maps.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "9.0.2124.61111"
+          }
+        }
+      },
       "Microsoft.Maui.Controls.Xaml/8.0.83": {
         "dependencies": {
           "Microsoft.Extensions.Configuration": "9.0.0",
@@ -595,8 +600,8 @@
           "Microsoft.Extensions.Logging": "9.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
           "Microsoft.Graphics.Win2D": "1.2.0",
-          "Microsoft.Maui.Essentials": "8.0.83",
-          "Microsoft.Maui.Graphics": "8.0.83",
+          "Microsoft.Maui.Essentials": "9.0.21",
+          "Microsoft.Maui.Graphics": "9.0.21",
           "Microsoft.Maui.Graphics.Win2D.WinUI.Desktop": "8.0.83",
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756",
           "Microsoft.WindowsAppSDK": "1.5.240627000"
@@ -608,41 +613,47 @@
           }
         }
       },
-      "Microsoft.Maui.Essentials/8.0.83": {
+      "Microsoft.Maui.Essentials/9.0.21": {
         "dependencies": {
-          "Microsoft.Maui.Graphics": "8.0.83",
-          "Microsoft.WindowsAppSDK": "1.5.240627000"
+          "Microsoft.Maui.Graphics": "9.0.21",
+          "System.Numerics.Vectors": "4.5.0"
         },
         "runtime": {
-          "lib/net8.0-windows10.0.19041/Microsoft.Maui.Essentials.dll": {
+          "lib/netstandard2.1/Microsoft.Maui.Essentials.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "8.0.8324.52914"
+            "fileVersion": "9.0.2124.61111"
           }
         }
       },
-      "Microsoft.Maui.Graphics/8.0.83": {
+      "Microsoft.Maui.Graphics/9.0.21": {
         "dependencies": {
-          "Microsoft.Graphics.Win2D": "1.2.0",
-          "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
-          "Microsoft.WindowsAppSDK": "1.5.240627000"
+          "System.Numerics.Vectors": "4.5.0"
         },
         "runtime": {
-          "lib/net8.0-windows10.0.19041/Microsoft.Maui.Graphics.dll": {
+          "lib/netstandard2.1/Microsoft.Maui.Graphics.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "8.0.8324.52914"
+            "fileVersion": "9.0.2124.61111"
           }
         }
       },
       "Microsoft.Maui.Graphics.Win2D.WinUI.Desktop/8.0.83": {
         "dependencies": {
           "Microsoft.Graphics.Win2D": "1.2.0",
-          "Microsoft.Maui.Graphics": "8.0.83",
+          "Microsoft.Maui.Graphics": "9.0.21",
           "Microsoft.WindowsAppSDK": "1.5.240627000"
         },
         "runtime": {
           "lib/net8.0-windows10.0.19041/Microsoft.Maui.Graphics.Win2D.WinUI.Desktop.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "8.0.8324.52914"
+          }
+        }
+      },
+      "Microsoft.Maui.Maps/9.0.21": {
+        "runtime": {
+          "lib/netstandard2.1/Microsoft.Maui.Maps.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "9.0.2124.61111"
           }
         }
       },
@@ -872,6 +883,7 @@
         }
       },
       "System.Memory/4.5.3": {},
+      "System.Numerics.Vectors/4.5.0": {},
       "System.Private.Uri/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0",
@@ -1252,13 +1264,6 @@
       "path": "microsoft.graphics.win2d/1.2.0",
       "hashPath": "microsoft.graphics.win2d.1.2.0.nupkg.sha512"
     },
-    "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-s/s20YTVY9r9TPfTrN5g8zPF1YhwxyqO6PxUkrYTGI2B+OGPe9AdajWZrLhFqXIvqIW23fnUE4+ztrUWNU1+9g==",
-      "path": "microsoft.io.recyclablememorystream/3.0.1",
-      "hashPath": "microsoft.io.recyclablememorystream.3.0.1.nupkg.sha512"
-    },
     "Microsoft.Maui.Controls/8.0.83": {
       "type": "package",
       "serviceable": true,
@@ -1287,6 +1292,13 @@
       "path": "microsoft.maui.controls.core/8.0.83",
       "hashPath": "microsoft.maui.controls.core.8.0.83.nupkg.sha512"
     },
+    "Microsoft.Maui.Controls.Maps/9.0.21": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Q6424s/8MBJhkuD/vkM3uDqO7FQdh+yR73DgF3f6AfKAKbecs946fK+OL+qoZl3bw8OUBTJuzWfdYk46xHeDdA==",
+      "path": "microsoft.maui.controls.maps/9.0.21",
+      "hashPath": "microsoft.maui.controls.maps.9.0.21.nupkg.sha512"
+    },
     "Microsoft.Maui.Controls.Xaml/8.0.83": {
       "type": "package",
       "serviceable": true,
@@ -1301,19 +1313,19 @@
       "path": "microsoft.maui.core/8.0.83",
       "hashPath": "microsoft.maui.core.8.0.83.nupkg.sha512"
     },
-    "Microsoft.Maui.Essentials/8.0.83": {
+    "Microsoft.Maui.Essentials/9.0.21": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-S6805HnbbbT5nNAxj86dATXm9pophANB96i2FYKuoVlN4CqCiZep4LKBNLlvDD41tk/hGP+Oy+YWsYgMWz/OEA==",
-      "path": "microsoft.maui.essentials/8.0.83",
-      "hashPath": "microsoft.maui.essentials.8.0.83.nupkg.sha512"
+      "sha512": "sha512-xfAY0qi3Tyh7lU/CmLzrfFyHeAUsQHdrcJhf6ISOUyuMEdwgDM04ehJe31WAQX6R252pE3bB7jfNZNzmO7z03g==",
+      "path": "microsoft.maui.essentials/9.0.21",
+      "hashPath": "microsoft.maui.essentials.9.0.21.nupkg.sha512"
     },
-    "Microsoft.Maui.Graphics/8.0.83": {
+    "Microsoft.Maui.Graphics/9.0.21": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-zR5zG20ozy/oXCLW8hV5HmBblx5UIxZUQeKCfcCMpUs4/3vEXcWBiCyjTAN7+EvQw0jCdm6g95uUZwIFSXSYwQ==",
-      "path": "microsoft.maui.graphics/8.0.83",
-      "hashPath": "microsoft.maui.graphics.8.0.83.nupkg.sha512"
+      "sha512": "sha512-VRCt/I9wDM+6rKwgqRD0GjlBVnVJ+qHl9ELxekr0wF+RVVUxw1gTMj+wbhhf5zGeBtV08nAhlb6ctYw1YiEt1g==",
+      "path": "microsoft.maui.graphics/9.0.21",
+      "hashPath": "microsoft.maui.graphics.9.0.21.nupkg.sha512"
     },
     "Microsoft.Maui.Graphics.Win2D.WinUI.Desktop/8.0.83": {
       "type": "package",
@@ -1321,6 +1333,13 @@
       "sha512": "sha512-29GkElC2bgq/zrbI44/yshMiEQ/K4yPIS6RtmhypUrZMap/aqAC5nJ/v0xJwx90MYvcrHoUUMzALQhWSkgKwlQ==",
       "path": "microsoft.maui.graphics.win2d.winui.desktop/8.0.83",
       "hashPath": "microsoft.maui.graphics.win2d.winui.desktop.8.0.83.nupkg.sha512"
+    },
+    "Microsoft.Maui.Maps/9.0.21": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-TMXJpXD4jMhnOmiyp15HlBgsV6anaqEkC4xHhcyd1DBXJa6ouT1iY52/pcd/rdI1jQ+aKldBTocYm848vVAqUw==",
+      "path": "microsoft.maui.maps/9.0.21",
+      "hashPath": "microsoft.maui.maps.9.0.21.nupkg.sha512"
     },
     "Microsoft.Maui.Resizetizer/8.0.83": {
       "type": "package",
@@ -1545,6 +1564,13 @@
       "sha512": "sha512-3oDzvc/zzetpTKWMShs1AADwZjQ/36HnsufHRPcOjyRAAMLDlu2iD33MBI2opxnezcVUtXyqDXXjoFMOU9c7SA==",
       "path": "system.memory/4.5.3",
       "hashPath": "system.memory.4.5.3.nupkg.sha512"
+    },
+    "System.Numerics.Vectors/4.5.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QQTlPTl06J/iiDbJCiepZ4H//BVraReU4O4EoRw1U02H5TLUIT7xn3GnDp9AXPSlJUDyFs4uWjWafNX6WrAojQ==",
+      "path": "system.numerics.vectors/4.5.0",
+      "hashPath": "system.numerics.vectors.4.5.0.nupkg.sha512"
     },
     "System.Private.Uri/4.3.0": {
       "type": "package",

@@ -1,5 +1,6 @@
 using TBL.Data;
 using System.Diagnostics;
+using Microsoft.Maui.Storage;
 
 namespace TBL.Views;
 
@@ -49,21 +50,17 @@ public partial class LoginPage : ContentPage
             {
                 case "Client":
                     Application.Current.MainPage = new ClientAppShell(_userData);
-                    Debug.WriteLine("[INFO] Переход на ClientAppShell");
                     break;
 
                 case "Moderator":
                     Application.Current.MainPage = new ModeratorAppShell(_userData);
-                    Debug.WriteLine("[INFO] Переход на ModeratorAppShell");
                     break;
 
                 case "Specialist":
                     Application.Current.MainPage = new SpecialistAppShell(_userData);
-                    Debug.WriteLine("[INFO] Переход на SpecialistAppShell");
                     break;
 
                 default:
-                    Debug.WriteLine("[ERROR] Неизвестная роль пользователя.");
                     await DisplayAlert("Ошибка", "Неизвестная роль пользователя.", "OK");
                     Application.Current.MainPage = new LoginPage(_userData); // Возврат на страницу входа
                     break;
@@ -71,7 +68,6 @@ public partial class LoginPage : ContentPage
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[ERROR] Ошибка входа: {ex.Message}");
             await DisplayAlert("Ошибка", $"Не удалось выполнить вход: {ex.Message}", "OK");
         }
     }

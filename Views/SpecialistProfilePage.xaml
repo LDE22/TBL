@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TBL.Views"
+             x:Class="TBL.Views.SpecialistProfilePage"
+             Title="Профиль специалиста">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+            <Button Text="Report"
+TextColor="Red"
+BackgroundColor="Transparent"
+Clicked="OnReportClicked"
+HorizontalOptions="End"
+VerticalOptions="Center"
+Padding="10,0" />
+      <!-- Информация о специалисте -->
+            <VerticalStackLayout Spacing="10">
+        <Image Source="{Binding PhotoBase64}" HeightRequest="100" WidthRequest="100" Aspect="AspectFill" HorizontalOptions="Center" />
+        <Label Text="{Binding Name}" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+        <Label Text="{Binding City}" FontSize="16" TextColor="Gray" HorizontalOptions="Center" />
+      </VerticalStackLayout>
+
+      <!-- Список услуг -->
+      <Label Text="Услуги" FontSize="20" FontAttributes="Bold" />
+      <CollectionView x:Name="ServicesCollection">
+        <CollectionView.ItemTemplate>
+          <DataTemplate>
+            <Frame Padding="10" Margin="5" BorderColor="Gray" CornerRadius="10">
+              <VerticalStackLayout>
+                <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold" />
+                <Label Text="{Binding Description}" FontSize="14" TextColor="Gray" />
+                <Label Text="{Binding Price, StringFormat='Цена: {0:C}'}" FontSize="16" TextColor="Green" />
+                <Button Text="Бронировать"
+                  Command="{Binding Source={RelativeSource AncestorType={x:Type local:SpecialistProfilePage}}, Path=BookServiceCommand}"
+                  CommandParameter="{Binding .}" />
+              </VerticalStackLayout>
+            </Frame>
+          </DataTemplate>
+        </CollectionView.ItemTemplate>
+      </CollectionView>
+
+      <!-- Кнопка для чата -->
+            <Button Text="Начать чат" Grid.Column="1"
+                Clicked="OnStartChatClicked"
+                CommandParameter="{Binding Id}" />  
+        </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>

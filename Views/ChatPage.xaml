@@ -2,21 +2,41 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TBL.Views.ChatPage"
              Title="Чат">
-    <ContentPage.Content>
-        <StackLayout Padding="10" Spacing="5">
-            <CollectionView x:Name="MessagesCollectionView" ItemsSource="{Binding Messages}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame BackgroundColor="LightGray" Margin="5" Padding="10" CornerRadius="10">
-                            <Label Text="{Binding Content}" />
+    <Grid RowDefinitions="Auto, *, Auto" Padding="10">
+        <!-- Верхний бар с заголовком и кнопкой -->
+             <Button Text="Report"
+                    TextColor="Red"
+                    BackgroundColor="Transparent"
+                    Clicked="OnReportClicked"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center"
+                    Padding="10,0" />
+        <!-- Список сообщений -->
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Messages}" SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Orientation="Vertical" Spacing="5">
+                        <!-- Сообщение -->
+                        <Frame Padding="10" Margin="5" CornerRadius="10"
+                               HorizontalOptions="{Binding SenderId, Converter={StaticResource MessageAlignmentConverter}}"
+                               BackgroundColor="{Binding SenderId, Converter={StaticResource SenderColorConverter}}">
+                            <Label Text="{Binding Content}" FontSize="14" TextColor="White" />
                         </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-            <StackLayout Orientation="Horizontal" Spacing="5">
-                <Entry x:Name="MessageEntry" Placeholder="Введите сообщение" HorizontalOptions="FillAndExpand" />
-                <Button Text="Отправить" Clicked="OnSendMessageClicked" />
-            </StackLayout>
+                        <!-- Время сообщения -->
+                        <Label Text="{Binding Timestamp, StringFormat='{0:HH:mm}'}" FontSize="10" TextColor="Gray"
+                               HorizontalOptions="{Binding SenderId, Converter={StaticResource TimeAlignmentConverter}}" />
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Поле ввода и кнопка -->
+        <StackLayout Grid.Row="2" Orientation="Horizontal" Spacing="10">
+            <Entry x:Name="MessageEntry"
+                   Placeholder="Введите сообщение"
+                   Text="{Binding NewMessage}" 
+                   HorizontalOptions="FillAndExpand" />
+            <Button Text="Отправить" Clicked="OnSendMessage" />
         </StackLayout>
-    </ContentPage.Content>
+    </Grid>
 </ContentPage>

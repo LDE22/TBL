@@ -20,10 +20,17 @@ public static class MauiProgram
 
         // Регистрация зависимостей
         builder.Services.AddSingleton<UserData>();
+        builder.Services.AddSingleton<FavoritesService>();
+        builder.Services.AddSingleton<ClientAppShell>();
+        builder.Services.AddSingleton<MainPage>();
         builder.Services.AddTransient<MnPage>();
         builder.Services.AddTransient<Profile>();
         builder.Services.AddTransient<ChatPage>();
+        builder.Services.AddTransient<ChatsPage>();
         builder.Services.AddTransient<ServicesPage>();
+        builder.Services.AddTransient<BookmarksPage>();
+        builder.Services.AddTransient<EditSchedulePage>();
+        builder.Services.AddTransient<StatisticsPage>();
 
         // Регистрация HttpClient и UserData
         builder.Services.AddHttpClient<UserData>(client =>

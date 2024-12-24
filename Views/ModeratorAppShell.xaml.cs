@@ -15,11 +15,14 @@ namespace TBL.Views
 
         private void OnLogoutClicked(object sender, EventArgs e)
         {
-            // ќчистка сохранЄнных данных
-            Preferences.Remove("UserRole");
+            // ќчистка всех сохранЄнных данных
+            Preferences.Clear();
 
-            // ѕереход на страницу входа
-            Application.Current.MainPage = new NavigationPage(new MainPage(_userData));
+            // —оздание нового экземпл€ра UserData
+            var newUserData = new UserData(new HttpClient());
+
+            // ѕереход на страницу MainPage
+            Application.Current.MainPage = new NavigationPage(new MainPage(newUserData));
         }
     }
 }

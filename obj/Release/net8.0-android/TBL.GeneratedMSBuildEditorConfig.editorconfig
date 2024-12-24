@@ -108,11 +108,17 @@ build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.RegistrationPage
 build_metadata.AdditionalFiles.TargetPath = Views\RegistrationPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\RegistrationPage.xaml
 
-[C:/PRODJ/TBL/Views/RepairPassPage.xaml]
+[C:/PRODJ/TBL/Views/RepairPasswordPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
-build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.RepairPassPage.xaml
-build_metadata.AdditionalFiles.TargetPath = Views\RepairPassPage.xaml
-build_metadata.AdditionalFiles.RelativePath = Views\RepairPassPage.xaml
+build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.RepairPasswordPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\RepairPasswordPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\RepairPasswordPage.xaml
+
+[C:/PRODJ/TBL/Views/ResetPasswordPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.ResetPasswordPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\ResetPasswordPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\ResetPasswordPage.xaml
 
 [C:/PRODJ/TBL/Views/ReviewsPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
@@ -138,8 +144,20 @@ build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.SpecialistAppShe
 build_metadata.AdditionalFiles.TargetPath = Views\SpecialistAppShell.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\SpecialistAppShell.xaml
 
+[C:/PRODJ/TBL/Views/SpecialistProfilePage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.SpecialistProfilePage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\SpecialistProfilePage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\SpecialistProfilePage.xaml
+
 [C:/PRODJ/TBL/Views/StatisticsPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.StatisticsPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Views\StatisticsPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\StatisticsPage.xaml
+
+[C:/PRODJ/TBL/Views/TicketDetailsPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = TBL.Views.TicketDetailsPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\TicketDetailsPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\TicketDetailsPage.xaml

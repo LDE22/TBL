@@ -9,27 +9,42 @@
 
             <!-- Фото профиля -->
             <Image Source="{Binding PhotoBase64}" 
-       HeightRequest="100" 
-       WidthRequest="100" 
-       Aspect="AspectFill"
-       HorizontalOptions="Center" />
+                   HeightRequest="100" 
+                   WidthRequest="100" 
+                   Aspect="AspectFill"
+                   HorizontalOptions="Center" />
 
             <Button Text="Изменить фото" 
-        Clicked="OnChangePhotoClicked" 
-        HorizontalOptions="Center" />
-
+                    Clicked="OnChangePhotoClicked" 
+                    HorizontalOptions="Center" />
 
             <!-- Поля для редактирования данных -->
             <Entry x:Name="NameEntry" Placeholder="{Binding Name}" />
             <Entry x:Name="EmailEntry" Placeholder="{Binding Email}" IsEnabled="False" />
-            <Entry x:Name="CityEntry" Placeholder="{Binding City}" />
+            <Entry x:Name="CityEntry" Placeholder="{Binding City}" IsEnabled="False" />
             <Entry x:Name="DescriptionEntry" Placeholder="{Binding Description}" />
-            
+
+            <!-- Карта -->
+            <Label Text="Изменение локации на карте:" FontSize="Medium" />
+            <WebView x:Name="YandexMapWebView"
+                     HeightRequest="300"
+                     WidthRequest="300" />
+
+            <Label x:Name="SelectedLocationLabel" 
+                   Text="Выбранное местоположение: -" 
+                   FontSize="Small" />
+
             <!-- Кнопка сохранения изменений -->
-            <Button Text="Сохранить изменения" BackgroundColor="Green" TextColor="White" Clicked="OnSaveChangesClicked" />
+            <Button Text="Сохранить изменения" 
+                    BackgroundColor="Green" 
+                    TextColor="White" 
+                    Clicked="OnSaveChangesClicked" />
 
             <!-- Кнопка удаления аккаунта -->
-            <Button Text="Удалить аккаунт" BackgroundColor="Red" TextColor="White" Clicked="OnDeleteAccountClicked" />
+            <Button Text="Удалить аккаунт" 
+                    BackgroundColor="Red" 
+                    TextColor="White" 
+                    Clicked="OnDeleteAccountClicked" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

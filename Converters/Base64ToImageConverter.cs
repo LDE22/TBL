@@ -1,21 +1,23 @@
 using System;
 using System.Globalization;
 using Microsoft.Maui.Controls;
-
-public class Base64ToImageConverter : IValueConverter
+namespace TBL.Converters
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public class Base64ToImageConverter : IValueConverter
     {
-        if (value is string base64 && !string.IsNullOrEmpty(base64))
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var imageBytes = System.Convert.FromBase64String(base64);
-            return ImageSource.FromStream(() => new MemoryStream(imageBytes));
+            if (value is string base64 && !string.IsNullOrEmpty(base64))
+            {
+                var imageBytes = System.Convert.FromBase64String(base64);
+                return ImageSource.FromStream(() => new MemoryStream(imageBytes));
+            }
+            return null;
         }
-        return null;
-    }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

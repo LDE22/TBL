@@ -51,30 +51,41 @@ namespace TBL.Views
         {
             try
             {
+                // Получаем услуги для текущего пользователя
                 var services = await _userData.GetServicesBySpecialistAsync(Preferences.Get("UserId", 0));
 
+                // Если услуг нет, показываем сообщение
                 if (services == null || !services.Any())
                 {
                     EmptyServicesLabel.IsVisible = true;
                     ServicesCollectionView.IsVisible = false;
-                }
-                else
-                {
-                    EmptyServicesLabel.IsVisible = false;
-                    ServicesCollectionView.IsVisible = true;
-
                     Services.Clear();
-                    foreach (var service in services)
-                    {
-                        Services.Add(service);
-                    }
+                    return;
                 }
+
+                // Скрываем сообщение и обновляем список услуг
+                EmptyServicesLabel.IsVisible = false;
+                ServicesCollectionView.IsVisible = true;
+                Services.Clear();
+                foreach (var service in services)
+                {
+                    Services.Add(service);
+                }
+            }
+            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                // Обработка случая, если услуг нет
+                EmptyServicesLabel.IsVisible = true;
+                ServicesCollectionView.IsVisible = false;
+                Services.Clear();
             }
             catch (Exception ex)
             {
+                // Общая обработка ошибок
                 await DisplayAlert("Ошибка", $"Ошибка при загрузке услуг: {ex.Message}", "ОК");
             }
         }
+
 
         private async Task EditService(Service service)
         {

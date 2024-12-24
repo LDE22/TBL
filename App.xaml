@@ -1,10 +1,18 @@
-<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<?xml version="1.0" encoding="utf-8" ?>
+    <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:TBL.Converters"
              x:Class="TBL.App">
     <Application.Resources>
         <ResourceDictionary>
+            <converters:ZeroToBooleanConverter x:Key="ZeroToBooleanConverter" />
+            <converters:InverseZeroToBooleanConverter x:Key="InverseZeroToBooleanConverter" />
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <converters:BooleanToAlignmentConverter x:Key="BooleanToAlignmentConverter" />
+            <converters:SenderColorConverter x:Key="SenderColorConverter" />
+            <converters:MessageAlignmentConverter x:Key="MessageAlignmentConverter" />
+            <converters:TimeAlignmentConverter x:Key="TimeAlignmentConverter" />
+            <converters:Base64ToImageConverter x:Key="Base64ToImageConverter" />
             <Color x:Key="Primary">#FFFFFF</Color>
             <Color x:Key="Secondary">#FFD700</Color>
             <Color x:Key="AppPrimaryColor">#ffbafd</Color>

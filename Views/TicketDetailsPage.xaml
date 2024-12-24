@@ -1,0 +1,60 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TBL.Views.TicketDetailsPage"
+             Title="Детали тикета">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <!-- Заголовок -->
+            <Label Text="{Binding TicketTitle}" 
+                   FontSize="24" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" />
+
+            <!-- Жалобщик -->
+            <HorizontalStackLayout Spacing="10">
+                <Image Source="{Binding ComplainantPhoto}"
+                       HeightRequest="50"
+                       WidthRequest="50"
+                       Aspect="AspectFill"/>
+                <VerticalStackLayout>
+                    <Label Text="{Binding ComplainantName}" FontSize="18" />
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+
+            <!-- Комментарий -->
+            <Label Text="Комментарий" FontSize="18" FontAttributes="Bold" />
+            <Label Text="{Binding Comment}" FontSize="16" TextColor="Gray" />
+
+            <BoxView HeightRequest="1" BackgroundColor="Gray" Margin="0,10,0,10" />
+
+            <!-- Целевой пользователь -->
+            <HorizontalStackLayout Spacing="10">
+                <Image Source="{Binding TargetPhoto}"
+                       HeightRequest="50"
+                       WidthRequest="50"
+                       Aspect="AspectFill"/>
+                <VerticalStackLayout>
+                    <Label Text="{Binding TargetName}" FontSize="18" />
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+
+            <!-- Кнопки действий -->
+            <Button Text="Заблокировать"
+                    BackgroundColor="Red"
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Command="{Binding BlockTargetCommand}" />
+
+            <Button Text="Удалить тикет"
+                    BackgroundColor="Black"
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Command="{Binding DeleteTicketCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

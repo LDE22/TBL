@@ -13,7 +13,7 @@ namespace TBL.Views
         public RegistrationPage(UserData userData)
         {
             InitializeComponent();
-            _userData = new UserData(new HttpClient { BaseAddress = new Uri("https://localhost:5000/api/") });
+            _userData = new UserData(new HttpClient());
         }
 
         private async void OnNextButtonClicked(object sender, EventArgs e)
@@ -82,7 +82,7 @@ namespace TBL.Views
                 };
 
                 await _userData.AddUserAsync(newUser);
-                await DisplayAlert("Успех", "Пользователь зарегистрирован.", "OK");
+                await DisplayAlert("Успех", "Подтвердите аккаунт через почту.", "OK");
 
                 // Переход на страницу входа
                 await Navigation.PopAsync();

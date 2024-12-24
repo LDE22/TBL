@@ -12,15 +12,18 @@ namespace TBL.Views
             InitializeComponent();
 
             // Получаем UserData из DI
-            _userData = userData;
+            _userData = userData ?? throw new ArgumentNullException(nameof(userData));
         }
         private void OnLogoutClicked(object sender, EventArgs e)
         {
-            // Очистка сохранённых данных
-            Preferences.Remove("UserRole");
+            // Очистка всех сохранённых данных
+            Preferences.Clear();
 
-            // Переход на страницу входа
-            Application.Current.MainPage = new NavigationPage(new MainPage(_userData));
+            // Создание нового экземпляра UserData
+            var newUserData = new UserData(new HttpClient());
+
+            // Переход на страницу MainPage
+            Application.Current.MainPage = new NavigationPage(new MainPage(newUserData));
         }
     }
 }

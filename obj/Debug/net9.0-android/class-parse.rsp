@@ -1,0 +1,4 @@
+--o="obj\Debug\net9.0-android\api.xml.class-parse"
+"obj\Debug\net9.0-android\library_project_jars\android-jsc-cppruntime-r250231.aar\classes.jar"
+"obj\Debug\net9.0-android\library_project_jars\android-jsc-intl-r250231.aar\classes.jar"
+"obj\Debug\net9.0-android\library_project_jars\android-jsc-r250231.aar\classes.jar"

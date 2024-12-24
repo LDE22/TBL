@@ -4,6 +4,9 @@ using System.Text;
 using TBL.Models;
 using System.Net.Http.Json;
 using System.Diagnostics;
+using System.Windows.Input;
+using System;
+using System.Text.Json.Serialization;
 
 namespace TBL.Data
 {
@@ -11,7 +14,7 @@ namespace TBL.Data
     {
         private readonly HttpClient _client;
         public event Action<User> UserUpdated;
-
+        public ICommand CreateChatCommand { get; }
         public UserData(HttpClient client)
         {
             client.BaseAddress = new Uri("https://tblapi-production.up.railway.app/api/");
@@ -23,12 +26,38 @@ namespace TBL.Data
         {
             var response = await _client.GetAsync($"Services/specialist/{specialistId}");
             response.EnsureSuccessStatusCode();
+
             var json = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<List<Service>>(json, new JsonSerializerOptions
+            var servicesResponse = JsonSerializer.Deserialize<ServicesResponse>(json, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
-            }) ?? new List<Service>();
+            });
+
+            return servicesResponse?.Data ?? new List<Service>();
         }
+
+        // Получение услуги по её ID
+        public async Task<Service> GetServiceByIdAsync(int serviceId)
+        {
+            var response = await _client.GetAsync($"Services/{serviceId}");
+            response.EnsureSuccessStatusCode();
+
+            var service = await response.Content.ReadFromJsonAsync<Service>();
+            if (service == null)
+            {
+                throw new Exception($"Услуга с ID {serviceId} не найдена.");
+            }
+
+            return service;
+        }
+
+
+        public async Task DeleteFavoriteAsync(int favoriteId)
+        {
+            var response = await _client.DeleteAsync($"Favorites/remove/{favoriteId}");
+            response.EnsureSuccessStatusCode();
+        }
+
 
         // Обновление услуги
         public async Task UpdateServiceAsync(Service service)
@@ -91,42 +120,50 @@ namespace TBL.Data
             }
         }
 
-        // Получение графика специалиста
-        public async Task<List<Schedule>> GetSchedulesAsync(int specialistId)
-        {
-            var response = await _client.GetAsync($"Schedule/{specialistId}");
-            response.EnsureSuccessStatusCode();
-            var json = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<List<Schedule>>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            }) ?? new List<Schedule>();
-        }
-
-        // Обновление графика
-        public async Task UpdateScheduleAsync(Schedule schedule)
-        {
-            var response = await _client.PutAsJsonAsync($"Schedule/update-shedule/{schedule.Id}", new
-            {
-                workingHours = schedule.WorkingHours,
-                bookedIntervals = schedule.BookedIntervals
-            });
-            response.EnsureSuccessStatusCode();
-        }
-
         // Запись клиента
         public async Task BookServiceAsync(Booking booking)
         {
-            var response = await _client.PostAsJsonAsync("Schedule/book", new
+            if (booking.SpecialistId <= 0 || booking.ClientId <= 0 || booking.ServiceId <= 0)
+            {
+                throw new ArgumentException("Не все обязательные поля заполнены.");
+            }
+
+            if (booking.Day == default)
+            {
+                throw new ArgumentException("Неверная дата.");
+            }
+
+            if (string.IsNullOrWhiteSpace(booking.TimeInterval))
+            {
+                throw new ArgumentException("Неверный временной интервал.");
+            }
+
+            var response = await _client.PostAsJsonAsync("Booking/book", new
             {
                 specialistId = booking.SpecialistId,
                 clientId = booking.ClientId,
                 serviceId = booking.ServiceId,
-                day = booking.Day,
+                day = booking.Day.ToString("o"), // Приведение к ISO 8601
                 timeInterval = booking.TimeInterval
             });
+
             response.EnsureSuccessStatusCode();
         }
+
+        public async Task<List<Booking>> GetSpecialistOrdersAsync(int specialistId)
+        {
+            var response = await _client.GetAsync($"Booking/specialist/{specialistId}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<Booking>>();
+        }
+
+        public async Task<List<Booking>> GetClientMeetingsAsync(int clientId)
+        {
+            var response = await _client.GetAsync($"Booking/client/{clientId}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<Booking>>();
+        }
+
         // Полуить пользователя по id
         public async Task<User> GetUserAsync(int userId)
         {
@@ -136,7 +173,12 @@ namespace TBL.Data
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
-                    return JsonSerializer.Deserialize<User>(json) ?? throw new Exception("Пользователь не найден.");
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                    };
+                    return JsonSerializer.Deserialize<User>(json, options) ?? throw new Exception("Пользователь не найден.");
                 }
                 else
                 {
@@ -153,6 +195,45 @@ namespace TBL.Data
                 throw new Exception($"Неизвестная ошибка: {ex.Message}");
             }
         }
+        // Полуить специалиста по id
+        public async Task<Specialist> GetSpecialistByIdAsync(int specialistId)
+        {
+            var response = await _client.GetAsync($"Users/Specialists/{specialistId}");
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<Specialist>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            }) ?? new Specialist();
+        }
+
+        public async Task<List<Schedule>> GetSpecialistScheduleAsync(int specialistId)
+        {
+            try
+            {
+                var response = await _client.GetAsync($"Schedule/{specialistId}");
+                response.EnsureSuccessStatusCode();
+
+                // Чтение данных
+                var json = await response.Content.ReadAsStringAsync();
+
+                // Убедитесь, что десериализация соответствует структуре JSON
+                var scheduleData = JsonSerializer.Deserialize<Dictionary<string, List<Schedule>>>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                // Вернём данные, если они есть
+                return scheduleData?["data"] ?? new List<Schedule>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка загрузки расписания: {ex.Message}");
+                throw;
+            }
+        }
+
 
 
         // Получение всех пользователей
@@ -207,11 +288,11 @@ namespace TBL.Data
             }
         }
 
-
         // Обновление аватара пользователя
-        public async Task UpdateAvatarAsync(int userId, string avatarBase64)
+        public async Task UpdateAvatarAsync(int userId, string photoBase64)
         {
-            var payload = new { Avatar = avatarBase64 };
+            // Исправление структуры отправляемых данных
+            var payload = new { PhotoBase64 = photoBase64 };
             var response = await _client.PutAsJsonAsync($"Users/update-avatar/{userId}", payload);
 
             if (!response.IsSuccessStatusCode)
@@ -220,6 +301,7 @@ namespace TBL.Data
                 throw new Exception($"Ошибка обновления аватара: {response.StatusCode}, {error}");
             }
         }
+
 
         // Обновление пользователя
         public async Task UpdateUserAsync(User user)
@@ -235,22 +317,25 @@ namespace TBL.Data
             UserUpdated?.Invoke(updatedUser); // Вызов события
         }
 
-
-        public async Task<List<ChatPreview>> GetChatsAsync(int userId)
-        {
-            var response = await _client.GetAsync($"Chat/chats/{userId}");
-            Debug.WriteLine(response);
-            response.EnsureSuccessStatusCode();
-            var json = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<List<ChatPreview>>(json) ?? new List<ChatPreview>();
-        }
-
         // Сброс пароля
         public async Task SendPasswordResetRequestAsync(string email)
         {
             var payload = new { Email = email };
-            var response = await _client.PostAsJsonAsync("Users/send-password-reset", payload);
-            response.EnsureSuccessStatusCode();
+
+            try
+            {
+                var response = await _client.PostAsJsonAsync("Users/send-password-reset", payload);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException ex)
+            {
+                if (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    throw new Exception("Пользователь с указанной почтой не найден.");
+                }
+
+                throw new Exception($"Ошибка при отправке запроса: {ex.Message}");
+            }
         }
 
         // Получение логов действий пользователя
@@ -281,18 +366,6 @@ namespace TBL.Data
             }) ?? new List<Message>();
         }
 
-        // Отправка сообщения
-        public async Task SendMessageAsync(Message message)
-        {
-            var response = await _client.PostAsJsonAsync("Chat/send", new
-            {
-                senderId = message.SenderId,
-                receiverId = message.ReceiverId,
-                content = message.Content
-            });
-            response.EnsureSuccessStatusCode();
-        }
-
         // Получение всех тикетов
         public async Task<List<Ticket>> GetTicketsAsync()
         {
@@ -303,6 +376,242 @@ namespace TBL.Data
             {
                 PropertyNameCaseInsensitive = true
             }) ?? new List<Ticket>();
+        }
+
+        public async Task ResetPasswordAsync(string token, string newPassword)
+        {
+            var payload = new
+            {
+                Token = token,
+                NewPassword = newPassword
+            };
+
+            var response = await _client.PostAsJsonAsync("Users/reset-password", payload);
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+        }
+
+        public async Task<List<Chat>> GetChatsAsync(int userId)
+        {
+            var response = await _client.GetFromJsonAsync<List<Chat>>($"Chats/{userId}");
+            return response ?? new List<Chat>();
+        }
+
+        public async Task<List<Message>> GetMessagesAsync(int chatId)
+        {
+            try
+            {
+                var response = await _client.GetFromJsonAsync<List<Message>>($"Chats/messages/{chatId}");
+                return response ?? new List<Message>();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Ошибка при получении сообщений: {ex.Message}");
+                return new List<Message>();
+            }
+        }
+        public async Task SendMessageAsync(Message message)
+        {
+            if (message == null || message.ChatId <= 0 || string.IsNullOrWhiteSpace(message.Content))
+                throw new ArgumentException("Некорректные данные сообщения.");
+
+            var payload = new
+            {
+                chatId = message.ChatId,
+                senderId = message.SenderId,
+                receiverId = message.ReceiverId,
+                content = message.Content,
+                timestamp = message.Timestamp
+            };
+
+            var response = await _client.PostAsJsonAsync("Chats/send-message", payload);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Ошибка отправки сообщения: {error}");
+            }
+        }
+
+        public async Task<int> CreateChatAsync(int senderId, int receiverId)
+        {
+            if (senderId == receiverId)
+                return 0;
+
+            var chatRequest = new
+            {
+                SenderId = senderId,
+                ReceiverId = receiverId
+            };
+
+            var response = await _client.PostAsJsonAsync("Chats/create", chatRequest);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Failed to create chat: {error}");
+            }
+
+            var chat = await response.Content.ReadFromJsonAsync<Chat>();
+            return chat?.Id ?? throw new Exception("Server did not return a valid chat ID.");
+        }
+
+
+        public async Task DeleteChatAsync(int chatId)
+        {
+            var response = await _client.DeleteAsync($"Chats/{chatId}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Ошибка удаления чата: {error}");
+            }
+        }
+
+        // Добавление в избранное
+        public async Task AddToFavoritesAsync(Favorite favorite)
+        {
+            var response = await _client.PostAsJsonAsync("Favorites/add", favorite);
+            response.EnsureSuccessStatusCode();
+        }
+
+        // Получение избранного
+        public async Task<List<Favorite>> GetFavoritesAsync(int clientId)
+        {
+            var response = await _client.GetStringAsync($"Favorites/{clientId}");
+            var favorites = JsonSerializer.Deserialize<List<Favorite>>(response, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true // Учитывать нечувствительность к регистру
+            });
+            return favorites ?? new List<Favorite>();
+        }
+
+
+
+        // Удаление из избранного
+        public async Task RemoveFromFavoritesAsync(int favoriteId)
+        {
+            var response = await _client.DeleteAsync($"Favorites/{favoriteId}");
+            response.EnsureSuccessStatusCode();
+        }
+
+        // Получение расписания для специалиста
+        public async Task<List<Schedule>> GetSchedulesAsync(int specialistId)
+        {
+            var response = await _client.GetAsync($"Schedule/{specialistId}");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<Schedule>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            else
+            {
+                throw new Exception($"Ошибка при загрузке расписания: {response.ReasonPhrase}");
+            }
+        }
+        // Добавление нового расписания
+        public async Task AddScheduleAsync(Schedule schedule)
+        {
+            var json = JsonSerializer.Serialize(schedule);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync("Schedule", content);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Ошибка при добавлении расписания: {response.ReasonPhrase}");
+            }
+        }
+
+        // Обновление существующего расписания
+        public async Task UpdateScheduleAsync(Schedule schedule)
+        {
+            var json = JsonSerializer.Serialize(schedule);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _client.PutAsync($"Schedule/{schedule.Id}", content);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Ошибка при обновлении расписания: {response.ReasonPhrase}");
+            }
+        }
+        // Удаление расписания
+        public async Task DeleteScheduleAsync(int scheduleId)
+        {
+            var response = await _client.DeleteAsync($"Schedule/{scheduleId}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Ошибка при удалении расписания: {response.ReasonPhrase}");
+            }
+        }
+        public async Task CreateTicketAsync(object ticketPayload)
+        {
+            var response = await _client.PostAsJsonAsync("/api/Tickets", ticketPayload);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Ошибка отправки тикета: {errorContent}");
+            }
+        }
+
+        public async Task UpdateTicketAsync(Ticket ticket)
+        {
+            var json = JsonSerializer.Serialize(ticket);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _client.PutAsync($"Tickets/{ticket.Id}", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Ошибка при обновлении тикета: {response.ReasonPhrase}");
+            }
+        }
+        public async Task<ModeratorStats> GetModeratorStatisticsAsync(int moderatorId)
+        {
+            var response = await _client.GetAsync($"Users/{moderatorId}/statistics");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<ModeratorStats>();
+        }
+        public async Task<ModeratorStats> CreateModeratorStatisticsAsync(ModeratorStats stats)
+        {
+            var response = await _client.PostAsJsonAsync("Users/statistics", stats);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Failed to create statistics: {response.ReasonPhrase}");
+            }
+
+            return await response.Content.ReadFromJsonAsync<ModeratorStats>();
+        }
+        public async Task BlockUserAsync(int userId)
+        {
+            var response = await _client.PutAsync($"Users/{userId}/block", null);
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task DeleteTicketAsync(int ticketId)
+        {
+            var response = await _client.DeleteAsync($"tickets/{ticketId}");
+            response.EnsureSuccessStatusCode();
+        }
+        public async Task<Ticket> GetTicketByIdAsync(int ticketId)
+        {
+            var response = await _client.GetAsync($"api/Tickets/{ticketId}");
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<Ticket>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+        }
+
+
+        public class ResponseWrapper<T>
+        {
+            public T Data { get; set; }
+        }
+        public class ServicesResponse
+        {
+            public List<Service> Data { get; set; }
         }
     }
 }

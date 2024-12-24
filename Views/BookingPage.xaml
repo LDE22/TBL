@@ -1,16 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TBL.Views.BookingPage">
-    <VerticalStackLayout Padding="20" Spacing="15">
-        <Label Text="Запись на услугу" FontSize="24" HorizontalOptions="Center" />
+             xmlns:local="clr-namespace:TBL.Views"
+             x:Class="TBL.Views.BookingPage"
+             Title="Бронирование услуги">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+            <Label Text="Выберите дату и время" FontSize="20" FontAttributes="Bold" />
 
-        <Picker x:Name="DayPicker" Title="Выберите день" />
-        <CollectionView x:Name="AvailableTimesCollectionView">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Button Text="{Binding}" Clicked="OnTimeSlotSelected" />
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </VerticalStackLayout>
+            <!-- Список доступного расписания -->
+            <CollectionView ItemsSource="{Binding AvailableTimes}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="5" BorderColor="Gray" CornerRadius="10">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding Day, StringFormat='{0:yyyy-MM-dd}'}" FontSize="18" FontAttributes="Bold" />
+                                <Label Text="{Binding WorkingHours}" FontSize="16" />
+                                <Button Text="Выбрать"
+                                        Command="{Binding ConfirmBookingCommand, Source={RelativeSource AncestorType={x:Type local:BookingPage}}}"
+                                        CommandParameter="{Binding .}" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

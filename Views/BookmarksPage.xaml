@@ -1,28 +1,66 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TBL.Views"
              x:Class="TBL.Views.BookmarksPage"
-             Title="Закладки">
-    <VerticalStackLayout Padding="20" Spacing="15">
-        <Label Text="Закладки" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+             Title="Избранное">
 
-        <!-- Список закладок -->
-        <CollectionView x:Name="BookmarksCollectionView">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Padding="10" Margin="5" CornerRadius="10" BackgroundColor="#EFEFEF">
-                        <HorizontalStackLayout Spacing="10">
-                            <Image Source="{Binding Image}" HeightRequest="50" WidthRequest="50" Aspect="AspectFill" />
-                            <VerticalStackLayout>
-                                <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" />
-                                <Label Text="{Binding Description}" FontSize="14" TextColor="Gray" />
-                            </VerticalStackLayout>
-                            <Button Text="Удалить" 
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
-                                    CommandParameter="{Binding .}" />
-                        </HorizontalStackLayout>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </VerticalStackLayout>
+    <Grid>
+        <!-- Индикатор загрузки -->
+        <ActivityIndicator IsRunning="{Binding IsLoading}" 
+                           IsVisible="{Binding IsLoading}" 
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center" />
+
+        <!-- Основное содержимое -->
+        <ScrollView IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
+            <VerticalStackLayout Padding="20" Spacing="15">
+                <CollectionView ItemsSource="{Binding Favorites}" 
+                                SelectionMode="None">
+                    <!-- Если избранное пустое -->
+                    <CollectionView.EmptyView>
+                        <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="20">
+                            <Label Text="Ваш список избранного пуст. Добавьте что-нибудь!" 
+                                   HorizontalOptions="Center" 
+                                   FontSize="16" 
+                                   TextColor="Gray" />
+                        </StackLayout>
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Padding="10" Margin="5" BorderColor="Gray" CornerRadius="10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="40" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Информация об услуге -->
+                                    <VerticalStackLayout Grid.Column="0">
+                                        <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold" TextColor="White"/>
+                                        <Label Text="{Binding Description}" FontSize="14" TextColor="Gray" />
+                                        <Label Text="{Binding Price, StringFormat='Цена: {0:C}'}" FontSize="16" TextColor="Green" />
+                                        <Label Text="{Binding City}" FontSize="14" TextColor="Gray" />
+                                        <Button Text="Подробнее" 
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:BookmarksPage}}, Path=OpenSpecialistProfileCommand}" 
+                                                CommandParameter="{Binding .}" />
+                                    </VerticalStackLayout>
+
+                                    <!-- Кнопка удаления -->
+                                    <ImageButton Source="close_red_icon.png" 
+                                                 Grid.Column="1" 
+                                                 WidthRequest="30" 
+                                                 HeightRequest="30" 
+                                                 HorizontalOptions="End" 
+                                                 VerticalOptions="Center" 
+                                                 Clicked="OnDeleteFavorite"
+                                                 CommandParameter="{Binding Id}" />
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

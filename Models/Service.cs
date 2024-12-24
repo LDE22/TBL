@@ -7,8 +7,9 @@ namespace TBL.Models
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
+        
         [JsonPropertyName("title")]
-        public string Title { get; set; }
+        public required string Title { get; set; }
 
         [JsonPropertyName("description")]
         public string Description { get; set; }
@@ -24,6 +25,9 @@ namespace TBL.Models
 
         [JsonPropertyName("City")]
         public string City { get; set; }
-
+        [JsonPropertyName("Duration")]
+        public int Duration { get; set; }
+        public List<Review> Reviews { get; set; } = new List<Review>();
+        public List<Favorite> Favorites { get; set; } = new List<Favorite>();
     }
 }

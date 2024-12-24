@@ -1,51 +1,105 @@
-using System; // Основные библиотеки
-using System.Collections.ObjectModel; // Для ObservableCollection
-using Microsoft.Maui.Controls; // Для MAUI
-using TBL.Data; // Для UserData
-using TBL.Models; // Для моделей Booking и Schedule
+using System.Collections.ObjectModel;
+using TBL.Data;
+using TBL.Models;
 
-
-namespace TBL.Views;
-public partial class EditSchedulePage : ContentPage
+namespace TBL.Views
 {
-    private readonly UserData _userData;
-
-    public ObservableCollection<Schedule> Schedules { get; set; } = new ObservableCollection<Schedule>();
-
-    public EditSchedulePage()
+    public partial class EditSchedulePage : ContentPage
     {
-        InitializeComponent();
-        _userData = new UserData(new HttpClient());
-        BindingContext = this;
-        LoadSchedulesAsync();
-    }
+        private readonly UserData _userData;
+        private readonly int _specialistId;
 
-    private async void LoadSchedulesAsync()
-    {
-        try
-        {
-            var schedules = await _userData.GetSchedulesAsync(Preferences.Get("UserId", 0));
-            foreach (var schedule in schedules)
-                Schedules.Add(schedule);
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlert("Ошибка", $"Не удалось загрузить график: {ex.Message}", "OK");
-        }
-    }
+        public ObservableCollection<Schedule> ScheduleList { get; set; }
 
-    private async void OnSaveScheduleClicked(object sender, EventArgs e)
-    {
-        try
+        public EditSchedulePage(UserData userData)
         {
-            foreach (var schedule in Schedules)
-                await _userData.UpdateScheduleAsync(schedule);
+            InitializeComponent();
+            _userData = userData ?? throw new ArgumentNullException(nameof(userData));
+            _specialistId = Preferences.Get("UserId", 0);
 
-            await DisplayAlert("Успех", "График обновлён.", "OK");
+            ScheduleList = new ObservableCollection<Schedule>();
+            BindingContext = this;
         }
-        catch (Exception ex)
+
+        protected override async void OnAppearing()
         {
-            await DisplayAlert("Ошибка", $"Не удалось сохранить изменения: {ex.Message}", "OK");
+            base.OnAppearing();
+            await LoadSchedulesAsync();
+        }
+
+        private async Task LoadSchedulesAsync()
+        {
+            try
+            {
+                var schedules = await _userData.GetSchedulesAsync(_specialistId);
+                ScheduleList.Clear();
+                foreach (var schedule in schedules)
+                {
+                    ScheduleList.Add(schedule);
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Ошибка", $"Не удалось загрузить расписание: {ex.Message}", "OK");
+            }
+        }
+
+        private async void OnAddScheduleClicked(object sender, EventArgs e)
+        {
+            var newSchedule = new Schedule
+            {
+                SpecialistId = _specialistId,
+                Day = DateTime.UtcNow.Date,
+                StartTime = new TimeSpan(9, 0, 0),
+                EndTime = new TimeSpan(17, 0, 0),
+                BreakDuration = 60
+            };
+
+            try
+            {
+                await _userData.AddScheduleAsync(newSchedule);
+                ScheduleList.Add(newSchedule);
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Ошибка", $"Не удалось добавить расписание: {ex.Message}", "OK");
+            }
+        }
+
+        private async void OnDeleteClicked(object sender, EventArgs e)
+        {
+            if (sender is Button button && button.CommandParameter is Schedule schedule)
+            {
+                var confirm = await DisplayAlert("Подтверждение", "Вы уверены, что хотите удалить расписание?", "Да", "Нет");
+                if (!confirm) return;
+
+                try
+                {
+                    await _userData.DeleteScheduleAsync(schedule.Id);
+                    ScheduleList.Remove(schedule);
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Ошибка", $"Не удалось удалить расписание: {ex.Message}", "OK");
+                }
+            }
+        }
+
+        private async void OnSaveScheduleClicked(object sender, EventArgs e)
+        {
+            foreach (var schedule in ScheduleList)
+            {
+                try
+                {
+                    await _userData.UpdateScheduleAsync(schedule);
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Ошибка", $"Ошибка сохранения: {ex.Message}", "OK");
+                }
+            }
+
+            await DisplayAlert("Успех", "Расписание сохранено!", "OK");
         }
     }
 }

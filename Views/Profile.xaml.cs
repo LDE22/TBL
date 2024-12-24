@@ -1,11 +1,7 @@
-using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 using System.Diagnostics;
-using System.Text;
 using TBL.Data;
 using TBL.Models;
-using TBL.Converters;
-using System.Text.Json;
 
 namespace TBL.Views
 {
@@ -18,6 +14,7 @@ namespace TBL.Views
         {
             InitializeComponent();
             _userData = userData;
+            InitializeYandexMap();
             LoadUserData();
         }
 
@@ -26,8 +23,6 @@ namespace TBL.Views
             try
             {
                 var username = Preferences.Get("Username", string.Empty);
-                Debug.WriteLine($"[INFO] Загружен Username из Preferences: {username}");
-
                 var users = await _userData.GetUsersAsync();
                 _currentUser = users.FirstOrDefault(u => u.Username == username);
 
@@ -41,11 +36,81 @@ namespace TBL.Views
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[ERROR] Ошибка загрузки данных: {ex.Message}");
                 await DisplayAlert("Ошибка", $"Ошибка загрузки данных: {ex.Message}", "OK");
             }
         }
+        private void InitializeYandexMap()
+        {
+            var htmlSource = new HtmlWebViewSource
+            {
+                Html = @"
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <script src='https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=b779e40b-d752-4359-a3db-2788bdeebb9a'></script>
+            <style>
+                html, body, #map {
+                    width: 100%;
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                }
+            </style>
+        </head>
+        <body>
+            <div id='map'></div>
+            <script>
+                ymaps.ready(function () {
+                    var map = new ymaps.Map('map', {
+                        center: [55.76, 37.64],
+                        zoom: 10
+                    });
 
+                    map.events.add('click', function (e) {
+                        var coords = e.get('coords');
+                        map.geoObjects.removeAll();
+                        var placemark = new ymaps.Placemark(coords, {
+                            balloonContent: 'Вы выбрали: ' + coords
+                        });
+                        map.geoObjects.add(placemark);
+
+                        if (window.external && window.external.notify) {
+                            window.external.notify(coords.join(','));
+                        }
+                    });
+                });
+            </script>
+        </body>
+        </html>"
+            };
+
+            YandexMapWebView.Source = htmlSource;
+
+            YandexMapWebView.Navigating += (s, e) =>
+            {
+                Debug.WriteLine("Я хуеглот");
+                if (e.Url.StartsWith("javascript:"))
+                {
+                    try
+                    {
+                        var coords = e.Url.Replace("javascript:", "").Split(',');
+                        if (coords.Length == 2)
+                        {
+                            _currentUser.Latitude = double.Parse(coords[0]);
+                            _currentUser.Longitude = double.Parse(coords[1]);
+                            _currentUser.Address = $"Lat: {_currentUser.Latitude}, Lon: {_currentUser.Longitude}";
+
+                            SelectedLocationLabel.Text = $"Выбранное местоположение: {_currentUser.Address}";
+                        }
+                        e.Cancel = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Ошибка: {ex.Message}");
+                    }
+                }
+            };
+        }
         private async void OnChangePhotoClicked(object sender, EventArgs e)
         {
             try
@@ -76,48 +141,6 @@ namespace TBL.Views
                 await DisplayAlert("Ошибка", $"Не удалось изменить фото: {ex.Message}", "OK");
             }
         }
-        private async void OnSaveChangesClicked(object sender, EventArgs e)
-        {
-            try
-            {
-                // Проверка изменений
-                bool isNameChanged = !string.IsNullOrWhiteSpace(NameEntry.Text) && _currentUser.Name != NameEntry.Text;
-                bool isCityChanged = !string.IsNullOrWhiteSpace(CityEntry.Text) && _currentUser.City != CityEntry.Text;
-                bool isDescriptionChanged = !string.IsNullOrWhiteSpace(DescriptionEntry.Text) && _currentUser.Description != DescriptionEntry.Text;
-
-                // Если изменений нет, выходим
-                if (!isNameChanged && !isCityChanged && !isDescriptionChanged)
-                {
-                    await DisplayAlert("Нет изменений", "Вы не внесли никаких изменений в профиль.", "OK");
-                    return;
-                }
-
-                // Обновляем данные
-                if (isNameChanged) _currentUser.Name = NameEntry.Text;
-                if (isCityChanged) _currentUser.City = CityEntry.Text;
-                if (isDescriptionChanged) _currentUser.Description = DescriptionEntry.Text;
-
-                // Отправка изменений на сервер
-                await _userData.UpdateUserAsync(_currentUser);
-
-                // Обновляем только изменённые значения Placeholder
-                if (isNameChanged) NameEntry.Placeholder = _currentUser.Name;
-                if (isCityChanged) CityEntry.Placeholder = _currentUser.City;
-                if (isDescriptionChanged) DescriptionEntry.Placeholder = _currentUser.Description;
-
-                // Очищаем поля ввода
-                NameEntry.Text = string.Empty;
-                CityEntry.Text = string.Empty;
-                DescriptionEntry.Text = string.Empty;
-
-                await DisplayAlert("Успех", "Профиль обновлён", "OK");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Ошибка при сохранении: {ex.Message}");
-                await DisplayAlert("Ошибка", ex.Message, "OK");
-            }
-        }
 
         private async void OnDeleteAccountClicked(object sender, EventArgs e)
         {
@@ -133,8 +156,23 @@ namespace TBL.Views
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[ERROR] Ошибка удаления аккаунта: {ex.Message}");
                 await DisplayAlert("Ошибка", $"Не удалось удалить аккаунт: {ex.Message}", "OK");
+            }
+        }
+
+        private async void OnSaveChangesClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(NameEntry.Text)) _currentUser.Name = NameEntry.Text;
+                if (!string.IsNullOrWhiteSpace(DescriptionEntry.Text)) _currentUser.Description = DescriptionEntry.Text;
+
+                await _userData.UpdateUserAsync(_currentUser);
+                await DisplayAlert("Успех", "Профиль обновлён", "OK");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Ошибка", $"Ошибка сохранения: {ex.Message}", "OK");
             }
         }
     }
