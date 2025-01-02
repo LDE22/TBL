@@ -112,16 +112,20 @@ namespace TBL.Views
 
         private async void OnReportClicked(object sender, EventArgs e)
         {
-            if (_receiverId == 0)
+            if (_receiverId == 0 || _receiverId == Preferences.Get("UserId", 0))
             {
                 // Попробуйте найти существующий чат
                 var senderId = Preferences.Get("UserId", 0);
                 var chats = await _userData.GetChatsAsync(senderId);
 
-                var chat = chats.FirstOrDefault(c => c.SenderId == senderId || c.ReceiverId == senderId);
+                // Найти чат, где текущий пользователь является отправителем или получателем
+                var chat = chats.FirstOrDefault(c =>
+                    (c.SenderId == senderId && c.ReceiverId != senderId) || // Получатель должен быть другим пользователем
+                    (c.ReceiverId == senderId && c.SenderId != senderId));  // Отправитель должен быть другим пользователем
+
                 if (chat != null)
                 {
-                    _receiverId = chat.ReceiverId; // Предположим, что есть поле ReceiverId
+                    _receiverId = chat.SenderId == senderId ? chat.ReceiverId : chat.SenderId; // Определяем _receiverId
                 }
 
                 if (_receiverId == 0)
@@ -130,6 +134,7 @@ namespace TBL.Views
                     return;
                 }
             }
+
 
             string comment = await DisplayPromptAsync("Жалоба", "Опишите проблему или причину жалобы:");
             if (!string.IsNullOrWhiteSpace(comment))

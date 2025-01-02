@@ -20,6 +20,7 @@ namespace TBL.Views
                 ServiceTitleEntry.Text = _service.Title;
                 ServiceDescriptionEditor.Text = _service.Description;
                 ServicePriceEntry.Text = _service.Price.ToString();
+                ServiceDurationEntry.Text = _service.Duration.ToString();
                 SaveButton.Text = "Обновить";
             }
             else // Режим добавления
@@ -27,6 +28,7 @@ namespace TBL.Views
                 ServiceTitleEntry.Text = string.Empty;
                 ServiceDescriptionEditor.Text = string.Empty;
                 ServicePriceEntry.Text = string.Empty;
+                ServiceDurationEntry.Text = string.Empty;
                 SaveButton.Text = "Создать";
             }
         }
@@ -36,8 +38,10 @@ namespace TBL.Views
             // Проверка корректности введенных данных
             if (string.IsNullOrWhiteSpace(ServiceTitleEntry.Text) ||
                 string.IsNullOrWhiteSpace(ServicePriceEntry.Text) ||
+                string.IsNullOrWhiteSpace(ServiceDurationEntry.Text) ||
                 !decimal.TryParse(ServicePriceEntry.Text, out var price) ||
-                price <= 0)
+                !int.TryParse(ServiceDurationEntry.Text, out var duration) ||
+                price <= 0 || duration <= 0)
             {
                 await DisplayAlert("Ошибка", "Пожалуйста, заполните все поля корректно.", "OK");
                 return;
@@ -52,6 +56,7 @@ namespace TBL.Views
                         Title = ServiceTitleEntry.Text,
                         Description = ServiceDescriptionEditor.Text,
                         Price = price,
+                        Duration = duration,
                         SpecialistId = Preferences.Get("UserId", 0),
                         SpecialistName = Preferences.Get("UserName", string.Empty),
                         City = Preferences.Get("UserCity", string.Empty)
@@ -65,6 +70,7 @@ namespace TBL.Views
                     _service.Title = ServiceTitleEntry.Text;
                     _service.Description = ServiceDescriptionEditor.Text;
                     _service.Price = price;
+                    _service.Duration = duration;
 
                     await _userData.UpdateServiceAsync(_service);
                     await DisplayAlert("Успех", "Услуга успешно обновлена.", "OK");

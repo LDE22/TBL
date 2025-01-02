@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:TBL.Views"
              x:Class="TBL.Views.BookingPage"
@@ -8,14 +8,14 @@
         <VerticalStackLayout Padding="20" Spacing="15">
             <Label Text="Выберите дату и время" FontSize="20" FontAttributes="Bold" />
 
-            <!-- Список доступного расписания -->
+            <!-- Список доступного времени -->
             <CollectionView ItemsSource="{Binding AvailableTimes}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Frame Padding="10" Margin="5" BorderColor="Gray" CornerRadius="10">
                             <VerticalStackLayout>
                                 <Label Text="{Binding Day, StringFormat='{0:yyyy-MM-dd}'}" FontSize="18" FontAttributes="Bold" />
-                                <Label Text="{Binding WorkingHours}" FontSize="16" />
+                                <Label Text="{Binding TimeRange}" FontSize="16" />
                                 <Button Text="Выбрать"
                                         Command="{Binding ConfirmBookingCommand, Source={RelativeSource AncestorType={x:Type local:BookingPage}}}"
                                         CommandParameter="{Binding .}" />

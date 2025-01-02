@@ -1,5 +1,6 @@
 using Microsoft.Maui.Storage;
 using System.Diagnostics;
+using System.Text.Json;
 using TBL.Data;
 using TBL.Models;
 
@@ -14,7 +15,7 @@ namespace TBL.Views
         {
             InitializeComponent();
             _userData = userData;
-            InitializeYandexMap();
+            //InitializeYandexMap();
             LoadUserData();
         }
 
@@ -39,78 +40,102 @@ namespace TBL.Views
                 await DisplayAlert("Ошибка", $"Ошибка загрузки данных: {ex.Message}", "OK");
             }
         }
-        private void InitializeYandexMap()
+       /* private void InitializeYandexMap()
         {
             var htmlSource = new HtmlWebViewSource
             {
                 Html = @"
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <script src='https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=b779e40b-d752-4359-a3db-2788bdeebb9a'></script>
-            <style>
-                html, body, #map {
-                    width: 100%;
-                    height: 100%;
-                    margin: 0;
-                    padding: 0;
-                }
-            </style>
-        </head>
-        <body>
-            <div id='map'></div>
-            <script>
-                ymaps.ready(function () {
-                    var map = new ymaps.Map('map', {
-                        center: [55.76, 37.64],
-                        zoom: 10
-                    });
+<!DOCTYPE html>
+<html>
+<head>
+    <script src='https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=b779e40b-d752-4359-a3db-2788bdeebb9a'></script>
+    <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id='map' style='width: 100%; height: 100%;'></div>
+    <script>
+        ymaps.ready(function () {
+            var map = new ymaps.Map('map', {
+                center: [55.76, 37.64], // Центр карты (Москва)
+                zoom: 10
+            });
 
-                    map.events.add('click', function (e) {
-                        var coords = e.get('coords');
-                        map.geoObjects.removeAll();
-                        var placemark = new ymaps.Placemark(coords, {
-                            balloonContent: 'Вы выбрали: ' + coords
-                        });
-                        map.geoObjects.add(placemark);
+            var placemark = new ymaps.Placemark([55.76, 37.64], {
+                balloonContent: 'Текущая метка'
+            });
 
-                        if (window.external && window.external.notify) {
-                            window.external.notify(coords.join(','));
-                        }
-                    });
-                });
-            </script>
-        </body>
-        </html>"
+            map.geoObjects.add(placemark);
+
+            map.events.add('click', function (e) {
+                var coords = e.get('coords');
+                placemark.geometry.setCoordinates(coords);
+                placemark.properties.set('balloonContent', 'Вы выбрали: ' + coords.join(', '));
+
+                // Передача координат через изменение window.location.href
+                window.location.href = 'https://coords/' + coords[0] + '/' + coords[1];
+            });
+        });
+    </script>
+</body>
+</html>"
             };
 
             YandexMapWebView.Source = htmlSource;
 
-            YandexMapWebView.Navigating += (s, e) =>
+            // Обработка Navigating для обработки координат
+            YandexMapWebView.Navigating += (sender, e) =>
             {
-                Debug.WriteLine("Я хуеглот");
-                if (e.Url.StartsWith("javascript:"))
+                Debug.WriteLine($"Navigating triggered: {e.Url}"); // Отладочный вывод
+
+                if (e.Url.StartsWith("https://coords/"))
                 {
                     try
                     {
-                        var coords = e.Url.Replace("javascript:", "").Split(',');
-                        if (coords.Length == 2)
-                        {
-                            _currentUser.Latitude = double.Parse(coords[0]);
-                            _currentUser.Longitude = double.Parse(coords[1]);
-                            _currentUser.Address = $"Lat: {_currentUser.Latitude}, Lon: {_currentUser.Longitude}";
+                        var parts = e.Url.Replace("https://coords/", "").Split('/');
 
+                        // Проверяем, что массив содержит ровно две части
+                        if (parts.Length == 2 &&
+                            double.TryParse(parts[0], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var latitude) &&
+                            double.TryParse(parts[1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var longitude))
+                        {
+                            // Обновляем данные
+                            _currentUser.Latitude = latitude;
+                            _currentUser.Longitude = longitude;
+                            _currentUser.Address = $"Lat: {latitude}, Lon: {longitude}";
+
+                            // Обновляем Label
                             SelectedLocationLabel.Text = $"Выбранное местоположение: {_currentUser.Address}";
+                            Debug.WriteLine($"Координаты обновлены: {_currentUser.Address}");
                         }
-                        e.Cancel = true;
+                        else
+                        {
+                            Debug.WriteLine("Неверный формат координат.");
+                        }
+
+                        e.Cancel = true; // Останавливаем навигацию
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"Ошибка: {ex.Message}");
+                        Debug.WriteLine($"Ошибка обработки координат: {ex.Message}");
                     }
                 }
             };
         }
+
+
+        public class Coordinates
+        {
+            public double Latitude { get; set; }
+            public double Longitude { get; set; }
+        }*/
+
         private async void OnChangePhotoClicked(object sender, EventArgs e)
         {
             try
@@ -149,7 +174,7 @@ namespace TBL.Views
 
             try
             {
-                await _userData.DeleteUserAsync(_currentUser.Id);
+                await _userData.BlockUserAsync(_currentUser.Id);
                 Preferences.Clear();
                 await DisplayAlert("Успех", "Аккаунт успешно удалён.", "OK");
                 Application.Current.MainPage = new NavigationPage(new LoginPage(_userData));
@@ -166,7 +191,7 @@ namespace TBL.Views
             {
                 if (!string.IsNullOrWhiteSpace(NameEntry.Text)) _currentUser.Name = NameEntry.Text;
                 if (!string.IsNullOrWhiteSpace(DescriptionEntry.Text)) _currentUser.Description = DescriptionEntry.Text;
-
+                if (!string.IsNullOrWhiteSpace(CityEntry.Text)) _currentUser.City = CityEntry.Text;
                 await _userData.UpdateUserAsync(_currentUser);
                 await DisplayAlert("Успех", "Профиль обновлён", "OK");
             }

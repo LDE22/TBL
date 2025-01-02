@@ -37,7 +37,7 @@
 
                                     <!-- Информация об услуге -->
                                     <VerticalStackLayout Grid.Column="0">
-                                        <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold" TextColor="White"/>
+                                        <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold"/>
                                         <Label Text="{Binding Description}" FontSize="14" TextColor="Gray" />
                                         <Label Text="{Binding Price, StringFormat='Цена: {0:C}'}" FontSize="16" TextColor="Green" />
                                         <Label Text="{Binding City}" FontSize="14" TextColor="Gray" />

@@ -21,18 +21,18 @@
             <!-- Поля для редактирования данных -->
             <Entry x:Name="NameEntry" Placeholder="{Binding Name}" />
             <Entry x:Name="EmailEntry" Placeholder="{Binding Email}" IsEnabled="False" />
-            <Entry x:Name="CityEntry" Placeholder="{Binding City}" IsEnabled="False" />
+            <Entry x:Name="CityEntry" Placeholder="{Binding City}" />
             <Entry x:Name="DescriptionEntry" Placeholder="{Binding Description}" />
 
             <!-- Карта -->
-            <Label Text="Изменение локации на карте:" FontSize="Medium" />
+          <!--<Label Text="Изменение локации на карте:" FontSize="Medium" />
             <WebView x:Name="YandexMapWebView"
                      HeightRequest="300"
                      WidthRequest="300" />
 
             <Label x:Name="SelectedLocationLabel" 
                    Text="Выбранное местоположение: -" 
-                   FontSize="Small" />
+                   FontSize="Small" />-->
 
             <!-- Кнопка сохранения изменений -->
             <Button Text="Сохранить изменения" 

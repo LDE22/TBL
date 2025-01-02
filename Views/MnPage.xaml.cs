@@ -96,27 +96,44 @@ public partial class MnPage : ContentPage
             SetLoadingState(false);
         }
     }
+
     private async Task LoadOrders()
     {
         try
         {
             var bookings = await _userData.GetSpecialistOrdersAsync(Preferences.Get("UserId", 0));
-            Orders.Clear();
+
+            // Используем временный список для обработки уникальных заказов
+            var tempOrders = new List<Order>();
 
             foreach (var booking in bookings)
             {
-                Orders.Add(new Order
+                // Получаем данные об услуге
+                var service = await _userData.GetServiceByIdAsync(booking.ServiceId);
+
+                // Получаем данные о клиенте
+                var client = await _userData.GetUserAsync(booking.ClientId);
+
+                // Добавляем уникальный заказ в временный список
+                tempOrders.Add(new Order
                 {
-                    Title = booking.Title,
-                    Description = booking.Description,
-                    Day = booking.Day,
-                    TimeInterval = booking.TimeInterval,
-                    ClientName = booking.ClientName,
-                    ClientPhoto = booking.ClientPhoto // Загрузка фото клиента
+                    Title = service?.Title ?? "Неизвестная услуга", // Название услуги
+                    Description = service?.Description ?? "Описание отсутствует", // Описание услуги
+                    ClientName = client?.Name ?? "Неизвестный клиент", // Имя клиента
+                    ClientPhoto = client?.PhotoBase64 ?? string.Empty, // Фото клиента
+                    Day = booking.Day, // Дата заказа
+                    TimeInterval = FormatTimeInterval(booking.TimeInterval) // Форматируем время без секунд
                 });
             }
 
-            OnPropertyChanged(nameof(Orders));
+            // Очищаем список Orders и добавляем уникальные заказы из временного списка
+            Orders.Clear();
+            foreach (var order in tempOrders)
+            {
+                Orders.Add(order);
+            }
+
+            OnPropertyChanged(nameof(HasOrders));
         }
         catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
@@ -136,18 +153,41 @@ public partial class MnPage : ContentPage
             var clientId = Preferences.Get("UserId", 0);
             var meetings = await _userData.GetClientMeetingsAsync(clientId);
 
-            Meetings.Clear();
+            // Используем временный список для обработки уникальных встреч
+            var tempMeetings = new List<Meeting>();
+
             foreach (var meeting in meetings)
             {
-                Meetings.Add(new Meeting
+                // Получаем данные об услуге
+                var service = await _userData.GetServiceByIdAsync(meeting.ServiceId);
+
+                // Получаем данные о специалисте
+                var specialist = await _userData.GetUserAsync(meeting.SpecialistId);
+
+                // Добавляем уникальную встречу в временный список
+                tempMeetings.Add(new Meeting
                 {
-                    Title = meeting.Title,
-                    Description = meeting.Description,
-                    Day = meeting.Day,
-                    TimeInterval = meeting.TimeInterval
+                    Title = service?.Title ?? "Неизвестная услуга", // Название услуги
+                    Description = service?.Description ?? "Описание отсутствует", // Описание услуги
+                    SpecialistName = specialist?.Name ?? "Неизвестный специалист", // Имя специалиста
+                    SpecialistPhoto = specialist?.PhotoBase64 ?? string.Empty, // Фото специалиста
+                    Day = meeting.Day, // Дата встречи
+                    TimeInterval = FormatTimeInterval(meeting.TimeInterval) // Форматируем время без секунд
                 });
             }
 
+            // Очищаем список Meetings и добавляем уникальные встречи из временного списка
+            Meetings.Clear();
+            foreach (var meeting in tempMeetings)
+            {
+                Meetings.Add(meeting);
+            }
+
+            OnPropertyChanged(nameof(HasMeetings));
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            Meetings.Clear();
             OnPropertyChanged(nameof(HasMeetings));
         }
         catch (Exception ex)
@@ -156,6 +196,20 @@ public partial class MnPage : ContentPage
         }
     }
 
+    // Вспомогательная функция для корректного форматирования времени
+    private string FormatTimeInterval(string timeInterval)
+    {
+        var parts = timeInterval.Split('-');
+        if (parts.Length == 2 &&
+            TimeSpan.TryParse(parts[0].Trim(), out var start) &&
+            TimeSpan.TryParse(parts[1].Trim(), out var end))
+        {
+            // Убираем секунды и оставляем только часы и минуты
+            return $"{start:hh\\:mm} - {end:hh\\:mm}";
+        }
+
+        return "Время не указано"; // Обработка случая неверного формата
+    }
     private async Task LoadTickets()
     {
         try

@@ -57,8 +57,9 @@ namespace TBL.Views
 
             try
             {
-                await _userData.AddScheduleAsync(newSchedule);
-                ScheduleList.Add(newSchedule);
+                var addedSchedule = await _userData.AddScheduleAsync(newSchedule);
+                ScheduleList.Add(addedSchedule); // Используем объект с обновлённым ID
+                await LoadSchedulesAsync();
             }
             catch (Exception ex)
             {
@@ -66,10 +67,17 @@ namespace TBL.Views
             }
         }
 
+
         private async void OnDeleteClicked(object sender, EventArgs e)
         {
             if (sender is Button button && button.CommandParameter is Schedule schedule)
             {
+                if (schedule.Id == 0)
+                {
+                    await DisplayAlert("Ошибка", "Невозможно удалить расписание без ID.", "OK");
+                    return;
+                }
+
                 var confirm = await DisplayAlert("Подтверждение", "Вы уверены, что хотите удалить расписание?", "Да", "Нет");
                 if (!confirm) return;
 
@@ -85,13 +93,14 @@ namespace TBL.Views
             }
         }
 
+
         private async void OnSaveScheduleClicked(object sender, EventArgs e)
         {
             foreach (var schedule in ScheduleList)
             {
                 try
                 {
-                    await _userData.UpdateScheduleAsync(schedule);
+                    await _userData.AddScheduleAsync(schedule);
                 }
                 catch (Exception ex)
                 {

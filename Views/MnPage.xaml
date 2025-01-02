@@ -50,7 +50,7 @@ HorizontalOptions="Center" />
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
                                     <Frame Padding="10" Margin="5" BorderColor="Gray" CornerRadius="10"
-       HeightRequest="150" WidthRequest="300">
+       HeightRequest="200" WidthRequest="300">
                                         <VerticalStackLayout>
                                             <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold" />
                                             <Label Text="{Binding Description}" FontSize="14" TextColor="Gray" />
@@ -68,32 +68,40 @@ HorizontalOptions="Center" />
                             </BindableLayout.ItemTemplate>
                         </StackLayout>
                     </ScrollView>
-
-                    <!-- Блок встреч -->
-                    <!-- БЛОК ВСТРЕЧ -->
-                    <Label Text="Встречи" FontSize="20" FontAttributes="Bold" />
-                    <ListView ItemsSource="{Binding Meetings}" IsVisible="{Binding HasMeetings}">
+                    <!-- Встречи -->
+                    <Label Text="Встречи" FontSize="20" FontAttributes="Bold" Padding="10" />
+                    <ListView ItemsSource="{Binding Meetings}" HasUnevenRows="True" IsVisible="{Binding HasMeetings}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <StackLayout Padding="20">
-                                        <!-- Название услуги -->
-                                        <Label Text="{Binding Title}" FontSize="16" FontAttributes="Bold" />
+                                    <StackLayout Orientation="Horizontal" Padding="10" Spacing="10">
+                                        <!-- Фото специалиста -->
+                                        <Image Source="{Binding SpecialistPhoto}" HeightRequest="50" WidthRequest="50" Aspect="AspectFill"/>
 
-                                        <!-- Описание услуги -->
-                                        <Label Text="{Binding Description}" FontSize="14" TextColor="Gray" />
+                                        <StackLayout Orientation="Vertical" VerticalOptions="CenterAndExpand">
+                                            <!-- Имя специалиста -->
+                                            <Label Text="{Binding SpecialistName}" FontSize="16" FontAttributes="Bold" />
 
-                                        <!-- Дата встречи -->
-                                        <Label Text="{Binding Day, StringFormat='Дата: {0:dd.MM.yyyy}'}" FontSize="14" />
+                                            <!-- Название услуги -->
+                                            <Label Text="{Binding Title}" FontSize="14" />
 
-                                        <!-- Временной интервал -->
-                                        <Label Text="{Binding TimeInterval}" FontSize="14" TextColor="Gray" />
+                                            <!-- Описание услуги -->
+                                            <Label Text="{Binding Description}" FontSize="12" TextColor="Gray" />
+
+                                            <!-- Дата встречи -->
+                                            <Label Text="{Binding Day, StringFormat='Дата: {0:dd.MM.yyyy}'}" FontSize="12" />
+
+                                            <!-- Временной интервал -->
+                                            <Label Text="{Binding TimeInterval}" FontSize="12" TextColor="Gray" />
+                                        </StackLayout>
                                     </StackLayout>
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <Label Text="Нет событий" FontSize="16" TextColor="Gray" IsVisible="{Binding !HasMeetings}" />
+
+                    <Label Text="Нет событий" FontSize="16" TextColor="Gray" IsVisible="{Binding HasMeetings, Converter={StaticResource InverseBooleanConverter}}" />
+
                 </VerticalStackLayout>
             </ContentView>
 
@@ -117,23 +125,26 @@ HorizontalOptions="Center" />
             <!-- Интерфейс специалиста -->
             <ContentView x:Name="SpecialistContent" IsVisible="{Binding IsSpecialist}">
                 <VerticalStackLayout>
-                    <Label Text="Мои заказы" FontSize="20" FontAttributes="Bold" />
-                    <ListView ItemsSource="{Binding Orders}">
+                    <!-- Заказы -->
+                    <Label Text="Мои заказы" FontSize="20" FontAttributes="Bold" Padding="10" />
+                    <ListView ItemsSource="{Binding Orders}" HasUnevenRows="True">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <StackLayout Padding="10">
+                                    <StackLayout Orientation="Horizontal" Padding="10" Spacing="10">
                                         <!-- Фото клиента -->
-                                        <Image Source="{Binding ClientPhoto}" HeightRequest="50" WidthRequest="50" Aspect="AspectFill" />
+                                        <Image Source="{Binding ClientPhoto}" HeightRequest="50" WidthRequest="50" Aspect="AspectFill"/>
 
-                                        <!-- Имя клиента -->
-                                        <Label Text="{Binding ClientName}" FontSize="16" FontAttributes="Bold" />
+                                        <StackLayout Orientation="Vertical" VerticalOptions="CenterAndExpand">
+                                            <!-- Имя клиента -->
+                                            <Label Text="{Binding ClientName}" FontSize="16" FontAttributes="Bold" />
 
-                                        <!-- Информация о заказе -->
-                                        <Label Text="{Binding Title}" FontSize="16" />
-                                        <Label Text="{Binding Description}" FontSize="14" TextColor="Gray" />
-                                        <Label Text="{Binding Day, StringFormat='Дата: {0:dd.MM.yyyy}'}" FontSize="14" />
-                                        <Label Text="{Binding TimeInterval}" FontSize="14" TextColor="Gray" />
+                                            <!-- Информация о заказе -->
+                                            <Label Text="{Binding Title}" FontSize="14" />
+                                            <Label Text="{Binding Description}" FontSize="12" TextColor="Gray" />
+                                            <Label Text="{Binding Day, StringFormat='Дата: {0:dd.MM.yyyy}'}" FontSize="12" />
+                                            <Label Text="{Binding TimeInterval}" FontSize="12" TextColor="Gray" />
+                                        </StackLayout>
                                     </StackLayout>
                                 </ViewCell>
                             </DataTemplate>

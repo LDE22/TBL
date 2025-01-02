@@ -20,6 +20,8 @@
                        Aspect="AspectFill"/>
                 <VerticalStackLayout>
                     <Label Text="{Binding ComplainantName}" FontSize="18" />
+                    <Button Text="Действия"
+                            Command="{Binding ShowComplainantActionsCommand}" />
                 </VerticalStackLayout>
             </HorizontalStackLayout>
 
@@ -37,24 +39,18 @@
                        Aspect="AspectFill"/>
                 <VerticalStackLayout>
                     <Label Text="{Binding TargetName}" FontSize="18" />
+                    <Button Text="Действия"
+                            Command="{Binding ShowTargetActionsCommand}" />
                 </VerticalStackLayout>
             </HorizontalStackLayout>
 
-            <!-- Кнопки действий -->
-            <Button Text="Заблокировать"
-                    BackgroundColor="Red"
-                    TextColor="White"
-                    CornerRadius="10"
-                    HeightRequest="50"
-                    Command="{Binding BlockTargetCommand}" />
-
+            <!-- Кнопка удалить тикет -->
             <Button Text="Удалить тикет"
                     BackgroundColor="Black"
                     TextColor="White"
                     CornerRadius="10"
                     HeightRequest="50"
                     Command="{Binding DeleteTicketCommand}" />
-
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

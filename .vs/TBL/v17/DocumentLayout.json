@@ -1,36 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\PRODJ\\TBL\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|c:\\prodj\\tbl\\views\\profile.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|solutionrelative:views\\profile.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|c:\\prodj\\tbl\\views\\bookingpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|solutionrelative:views\\bookingpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|c:\\prodj\\tbl\\views\\profile.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|solutionrelative:views\\profile.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|c:\\prodj\\tbl\\models\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|solutionrelative:models\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|c:\\prodj\\tbl\\views\\schedulepage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|solutionrelative:views\\schedulepage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|c:\\prodj\\tbl\\views\\schedulepage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|solutionrelative:views\\schedulepage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|c:\\prodj\\tbl\\views\\loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4AD13267-D25A-4EA5-8BC8-367EFE52330C}|TBL.csproj|solutionrelative:views\\loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -38,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -47,96 +18,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "BookingPage.xaml.cs",
-              "DocumentMoniker": "C:\\PRODJ\\TBL\\Views\\BookingPage.xaml.cs",
-              "RelativeDocumentMoniker": "Views\\BookingPage.xaml.cs",
-              "ToolTip": "C:\\PRODJ\\TBL\\Views\\BookingPage.xaml.cs",
-              "RelativeToolTip": "Views\\BookingPage.xaml.cs",
-              "ViewState": "AgIAACMAAAAAAAAAAAAEwDgAAAAsAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-24T18:54:44.019Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Service.cs",
-              "DocumentMoniker": "C:\\PRODJ\\TBL\\Models\\Service.cs",
-              "RelativeDocumentMoniker": "Models\\Service.cs",
-              "ToolTip": "C:\\PRODJ\\TBL\\Models\\Service.cs",
-              "RelativeToolTip": "Models\\Service.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-24T18:18:06.164Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "SchedulePage.xaml.cs",
-              "DocumentMoniker": "C:\\PRODJ\\TBL\\Views\\SchedulePage.xaml.cs",
-              "RelativeDocumentMoniker": "Views\\SchedulePage.xaml.cs",
-              "ToolTip": "C:\\PRODJ\\TBL\\Views\\SchedulePage.xaml.cs",
-              "RelativeToolTip": "Views\\SchedulePage.xaml.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAEwDEAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-24T18:04:08.56Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "SchedulePage.xaml",
-              "DocumentMoniker": "C:\\PRODJ\\TBL\\Views\\SchedulePage.xaml",
-              "RelativeDocumentMoniker": "Views\\SchedulePage.xaml",
-              "ToolTip": "C:\\PRODJ\\TBL\\Views\\SchedulePage.xaml",
-              "RelativeToolTip": "Views\\SchedulePage.xaml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-24T18:04:06.128Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "LoginPage.xaml.cs",
-              "DocumentMoniker": "C:\\PRODJ\\TBL\\Views\\LoginPage.xaml.cs",
-              "RelativeDocumentMoniker": "Views\\LoginPage.xaml.cs",
-              "ToolTip": "C:\\PRODJ\\TBL\\Views\\LoginPage.xaml.cs",
-              "RelativeToolTip": "Views\\LoginPage.xaml.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAAwAUAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-24T16:38:05.14Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Profile.xaml.cs",
-              "DocumentMoniker": "C:\\PRODJ\\TBL\\Views\\Profile.xaml.cs",
-              "RelativeDocumentMoniker": "Views\\Profile.xaml.cs",
-              "ToolTip": "C:\\PRODJ\\TBL\\Views\\Profile.xaml.cs",
-              "RelativeToolTip": "Views\\Profile.xaml.cs",
-              "ViewState": "AgIAAFMAAAAAAAAAAAAgwGQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-24T14:29:28.986Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Profile.xaml",
-              "DocumentMoniker": "C:\\PRODJ\\TBL\\Views\\Profile.xaml",
-              "RelativeDocumentMoniker": "Views\\Profile.xaml",
-              "ToolTip": "C:\\PRODJ\\TBL\\Views\\Profile.xaml",
-              "RelativeToolTip": "Views\\Profile.xaml",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAiwDIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-24T14:29:23.687Z",
-              "EditorCaption": ""
             }
           ]
         }

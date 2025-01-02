@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using TBL.Data;
 using TBL.Models;
+using TBL.Views;
 
 namespace TBL.ViewModels
 {
@@ -59,7 +60,8 @@ namespace TBL.ViewModels
             }
         }
 
-        public Command BlockTargetCommand { get; }
+        public Command ShowComplainantActionsCommand { get; }
+        public Command ShowTargetActionsCommand { get; }
         public Command DeleteTicketCommand { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -69,11 +71,11 @@ namespace TBL.ViewModels
             _ticket = ticket;
             _userData = userData;
 
-            BlockTargetCommand = new Command(async () => await BlockTargetAsync());
+            ShowComplainantActionsCommand = new Command(async () => await ShowActionsAsync(_ticket.UserId, "жалобщика"));
+            ShowTargetActionsCommand = new Command(async () => await ShowActionsAsync(_ticket.TargetId, "цели"));
             DeleteTicketCommand = new Command(async () => await DeleteTicketAsync());
         }
 
-        // Загрузка данных (заявитель и цель)
         public async Task LoadDataAsync()
         {
             try
@@ -88,15 +90,47 @@ namespace TBL.ViewModels
             }
             catch (Exception ex)
             {
-                // Обработка ошибок загрузки данных
                 await Application.Current.MainPage.DisplayAlert("Ошибка", $"Не удалось загрузить данные: {ex.Message}", "OK");
             }
         }
 
-        private async Task BlockTargetAsync()
+
+        private async Task ShowActionsAsync(int userId, string userRole)
         {
-            bool confirm = await Application.Current.MainPage.DisplayAlert("Подтверждение",
-                $"Вы уверены, что хотите заблокировать {TargetName}?",
+            string action = await Application.Current.MainPage.DisplayActionSheet(
+                $"Действия для {userRole}",
+                "Отмена",
+                null,
+                "Начать чат",
+                "Заблокировать");
+
+            if (action == "Начать чат")
+            {
+                await StartChatAsync(userId);
+            }
+            else if (action == "Заблокировать")
+            {
+                await BlockUserAsync(userId);
+            }
+        }
+
+        private async Task StartChatAsync(int userId)
+        {
+            try
+            {
+                await Application.Current.MainPage.Navigation.PushAsync(new ChatPage(userId, _userData, false));
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Ошибка", $"Не удалось начать чат: {ex.Message}", "OK");
+            }
+        }
+
+        private async Task BlockUserAsync(int userId)
+        {
+            bool confirm = await Application.Current.MainPage.DisplayAlert(
+                "Подтверждение",
+                "Вы уверены, что хотите заблокировать пользователя?",
                 "Да",
                 "Нет");
 
@@ -104,8 +138,21 @@ namespace TBL.ViewModels
 
             try
             {
-                await _userData.BlockUserAsync(_ticket.TargetId);
-                await Application.Current.MainPage.DisplayAlert("Успех", $"{TargetName} заблокирован.", "OK");
+                // Блокировка пользователя
+                await _userData.BlockUserAsync(userId);
+
+                // Уведомление об успехе
+                await Application.Current.MainPage.DisplayAlert("Успех", "Пользователь заблокирован.", "OK");
+
+                // Обновляем статистику блокировок
+                var moderatorId = Preferences.Get("UserId", 0);
+                await _userData.UpdateModeratorStatisticsAsync(moderatorId, "BlockedProfiles", 1);
+
+                // Удаляем тикет после блокировки
+                await _userData.DeleteTicketAsync(_ticket.Id);
+
+                // Возврат на предыдущую страницу
+                await Application.Current.MainPage.Navigation.PopAsync();
             }
             catch (Exception ex)
             {
@@ -115,7 +162,8 @@ namespace TBL.ViewModels
 
         private async Task DeleteTicketAsync()
         {
-            bool confirm = await Application.Current.MainPage.DisplayAlert("Подтверждение",
+            bool confirm = await Application.Current.MainPage.DisplayAlert(
+                "Подтверждение",
                 $"Вы уверены, что хотите удалить тикет #{_ticket.Id}?",
                 "Да",
                 "Нет");
@@ -124,9 +172,18 @@ namespace TBL.ViewModels
 
             try
             {
+                // Удаление тикета
                 await _userData.DeleteTicketAsync(_ticket.Id);
+
+                // Уведомление об успехе
                 await Application.Current.MainPage.DisplayAlert("Успех", "Тикет удалён.", "OK");
-                await Application.Current.MainPage.Navigation.PopAsync(); // Возврат на предыдущую страницу
+
+                // Обновляем статистику закрытых тикетов
+                var moderatorId = Preferences.Get("UserId", 0);
+                await _userData.UpdateModeratorStatisticsAsync(moderatorId, "ClosedTickets", 1);
+
+                // Возврат на предыдущую страницу
+                await Application.Current.MainPage.Navigation.PopAsync();
             }
             catch (Exception ex)
             {

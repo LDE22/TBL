@@ -21,6 +21,12 @@
                Keyboard="Numeric"
                FontSize="16" />
 
+        <!-- Поле для ввода продолжительности -->
+        <Entry x:Name="ServiceDurationEntry"
+               Placeholder="Введите продолжительность (в минутах)"
+               Keyboard="Numeric"
+               FontSize="16" />
+
         <!-- Кнопка сохранения -->
         <Button x:Name="SaveButton"
                 Text="Сохранить"

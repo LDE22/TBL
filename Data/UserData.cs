@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Windows.Input;
 using System;
 using System.Text.Json.Serialization;
+using System.Net;
 
 namespace TBL.Data
 {
@@ -123,6 +124,7 @@ namespace TBL.Data
         // Запись клиента
         public async Task BookServiceAsync(Booking booking)
         {
+            // Проверяем заполнение обязательных полей
             if (booking.SpecialistId <= 0 || booking.ClientId <= 0 || booking.ServiceId <= 0)
             {
                 throw new ArgumentException("Не все обязательные поля заполнены.");
@@ -133,21 +135,37 @@ namespace TBL.Data
                 throw new ArgumentException("Неверная дата.");
             }
 
-            if (string.IsNullOrWhiteSpace(booking.TimeInterval))
+            if (string.IsNullOrWhiteSpace(booking.TimeInterval) || !booking.TimeInterval.Contains("-"))
             {
                 throw new ArgumentException("Неверный временной интервал.");
             }
 
-            var response = await _client.PostAsJsonAsync("Booking/book", new
+            // Сериализация временного интервала
+            var parts = booking.TimeInterval.Split('-');
+            if (!TimeSpan.TryParse(parts[0], out var startTime) || !TimeSpan.TryParse(parts[1], out var endTime))
+            {
+                throw new ArgumentException("Временной интервал имеет неверный формат.");
+            }
+
+            // Подготовка данных для запроса
+            var payload = new
             {
                 specialistId = booking.SpecialistId,
                 clientId = booking.ClientId,
                 serviceId = booking.ServiceId,
-                day = booking.Day.ToString("o"), // Приведение к ISO 8601
-                timeInterval = booking.TimeInterval
-            });
+                day = booking.Day.ToString("o"), // ISO 8601 формат
+                startTime = startTime,
+                endTime = endTime
+            };
 
-            response.EnsureSuccessStatusCode();
+            var response = await _client.PostAsJsonAsync("Booking/book", payload);
+
+            // Проверяем успешность ответа
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Ошибка сервера: {response.ReasonPhrase} - {errorContent}");
+            }
         }
 
         public async Task<List<Booking>> GetSpecialistOrdersAsync(int specialistId)
@@ -234,8 +252,6 @@ namespace TBL.Data
             }
         }
 
-
-
         // Получение всех пользователей
         public async Task<List<User>> GetUsersAsync()
         {
@@ -273,19 +289,13 @@ namespace TBL.Data
                 email = user.Email,
                 name = user.Name,
                 city = user.City,
-                role = user.Role
+                description = user.Description,
+                role = user.Role,
+                Address = user.Address,
+                Latitude = user.Latitude,
+                Longitude = user.Longitude
             });
             response.EnsureSuccessStatusCode();
-        }
-        //Удаление пользователя
-        public async Task DeleteUserAsync(int userId)
-        {
-            var response = await _client.DeleteAsync($"Users/{userId}");
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorDetails = await response.Content.ReadAsStringAsync();
-                throw new Exception($"Ошибка удаления пользователя: {response.StatusCode}. Детали: {errorDetails}");
-            }
         }
 
         // Обновление аватара пользователя
@@ -509,29 +519,38 @@ namespace TBL.Data
                 throw new Exception($"Ошибка при загрузке расписания: {response.ReasonPhrase}");
             }
         }
+
         // Добавление нового расписания
-        public async Task AddScheduleAsync(Schedule schedule)
+        public async Task<Schedule> AddScheduleAsync(Schedule schedule)
         {
-            var json = JsonSerializer.Serialize(schedule);
+            // Преобразуем `DateOnly` в строку
+            var payload = new
+            {
+                schedule.Id,
+                schedule.SpecialistId,
+                Day = schedule.Day.ToString("yyyy-MM-dd"), // Преобразуем Day в строку
+                schedule.StartTime,
+                schedule.EndTime,
+                schedule.BreakDuration
+            };
+
+            var json = JsonSerializer.Serialize(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("Schedule", content);
-            if (!response.IsSuccessStatusCode)
+            var response = await _client.PostAsync("Schedule/add", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<Schedule>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            else
             {
                 throw new Exception($"Ошибка при добавлении расписания: {response.ReasonPhrase}");
             }
         }
 
-        // Обновление существующего расписания
-        public async Task UpdateScheduleAsync(Schedule schedule)
-        {
-            var json = JsonSerializer.Serialize(schedule);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync($"Schedule/{schedule.Id}", content);
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"Ошибка при обновлении расписания: {response.ReasonPhrase}");
-            }
-        }
+
+
         // Удаление расписания
         public async Task DeleteScheduleAsync(int scheduleId)
         {
@@ -541,9 +560,24 @@ namespace TBL.Data
                 throw new Exception($"Ошибка при удалении расписания: {response.ReasonPhrase}");
             }
         }
+
+        // Получение доступных интервалов для специалиста
+        public async Task<List<(TimeSpan Start, TimeSpan End)>> GetAvailableIntervalsAsync(int specialistId)
+        {
+            var response = await _client.GetAsync($"Schedule/specialist/{specialistId}/available-intervals");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<(TimeSpan Start, TimeSpan End)>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            else
+            {
+                throw new Exception($"Ошибка при загрузке доступных интервалов: {response.ReasonPhrase}");
+            }
+        }
         public async Task CreateTicketAsync(object ticketPayload)
         {
-            var response = await _client.PostAsJsonAsync("/api/Tickets", ticketPayload);
+            var response = await _client.PostAsJsonAsync("Tickets", ticketPayload);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -564,6 +598,21 @@ namespace TBL.Data
                 throw new HttpRequestException($"Ошибка при обновлении тикета: {response.ReasonPhrase}");
             }
         }
+
+        public async Task UpdateModeratorStatisticsAsync(int moderatorId, string statField, int incrementBy)
+        {
+            var payload = new { ModeratorId = moderatorId, Field = statField, IncrementBy = incrementBy };
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync("Users/update", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Failed to update statistics: {response.ReasonPhrase}");
+            }
+        }
+
         public async Task<ModeratorStats> GetModeratorStatisticsAsync(int moderatorId)
         {
             var response = await _client.GetAsync($"Users/{moderatorId}/statistics");
@@ -583,7 +632,7 @@ namespace TBL.Data
         }
         public async Task BlockUserAsync(int userId)
         {
-            var response = await _client.PutAsync($"Users/{userId}/block", null);
+            var response = await _client.DeleteAsync($"Users/{userId}/block");
             response.EnsureSuccessStatusCode();
         }
 

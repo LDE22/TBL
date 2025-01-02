@@ -2,6 +2,7 @@ using System.Text.RegularExpressions; // Для регулярных выражений
 using Microsoft.Maui.Controls;
 using TBL.Models;
 using TBL.Data;
+using System.Net;
 
 namespace TBL.Views
 {
@@ -26,11 +27,12 @@ namespace TBL.Views
                 string username = UsernameEntry.Text?.Trim();
                 string email = EmailEntry.Text?.Trim();
                 string password = PasswordEntry.Text?.Trim();
+                string confirmpassword = ConfirmPasswordEntry.Text?.Trim();
 
                 // Проверка на пустые поля
                 if (string.IsNullOrWhiteSpace(username) ||
                     string.IsNullOrWhiteSpace(email) ||
-                    string.IsNullOrWhiteSpace(password))
+                    string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(confirmpassword))
                 {
                     await DisplayAlert("Ошибка", "Все поля должны быть заполнены.", "OK");
                     return;
@@ -64,6 +66,13 @@ namespace TBL.Views
                     return;
                 }
 
+                // Проверка пароля
+                if (password != confirmpassword)
+                {
+                    await DisplayAlert("Ошибка", "Пароли не совпадают.", "OK");
+                    return;
+                }
+
                 // Проверяем, существует ли пользователь
                 var existingUsers = await _userData.GetUsersAsync();
                 if (existingUsers.Any(u => u.Username == username || u.Email == email))
@@ -78,7 +87,10 @@ namespace TBL.Views
                     Username = username,
                     Email = email,
                     Password = password,
-                    Role = _selectedRole
+                    Role = _selectedRole,
+                    Address = "Красная площадь, Москва, Россия",
+                    Latitude = 55.753215,
+                    Longitude = 37.622504
                 };
 
                 await _userData.AddUserAsync(newUser);

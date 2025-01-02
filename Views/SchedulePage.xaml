@@ -7,17 +7,34 @@
         <CollectionView x:Name="ScheduleCollectionView" ItemsSource="{Binding ScheduleList}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <StackLayout Padding="10" Orientation="Horizontal" Spacing="10">
+                    <VerticalStackLayout Padding="10" Spacing="5">
+                        <!-- Дата -->
+                        <Label Text="Дата:" FontSize="Small" />
                         <DatePicker Date="{Binding Day}" />
+
+                        <!-- Начало рабочего времени -->
+                        <Label Text="Начало рабочего времени:" FontSize="Small" />
                         <TimePicker Time="{Binding StartTime}" />
+
+                        <!-- Конец рабочего времени -->
+                        <Label Text="Конец рабочего времени:" FontSize="Small" />
                         <TimePicker Time="{Binding EndTime}" />
-                        <Button Text="Удалить" Clicked="OnDeleteClicked" CommandParameter="{Binding .}" />
-                    </StackLayout>
+
+                        <!-- Перерыв -->
+                        <Label Text="Перерыв (в минутах):" FontSize="Small" />
+                        <Entry Text="{Binding BreakDuration}" Placeholder="Введите перерыв" Keyboard="Numeric" />
+
+                        <!-- Кнопка удаления -->
+                        <Button Text="Удалить запись" Clicked="OnDeleteClicked" CommandParameter="{Binding .}" />
+                    </VerticalStackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
+        <!-- Кнопка добавления -->
         <Button Text="Добавить запись" Clicked="OnAddScheduleClicked" />
+
+        <!-- Кнопка сохранения -->
         <Button Text="Сохранить изменения" Clicked="OnSaveScheduleClicked" />
     </VerticalStackLayout>
 </ContentPage>

@@ -70,23 +70,20 @@ namespace TBL.Views
             }
         }
 
-        private async void OnChatSelected(object sender, SelectionChangedEventArgs e)
+        private async void OnChatTapped(object sender, EventArgs e)
         {
-            if (e.CurrentSelection.FirstOrDefault() is Chat selectedChat)
+            if (sender is Frame frame && frame.BindingContext is Chat chat)
             {
                 try
                 {
-                    // Переход на соответствующий ChatPage
-                    await Navigation.PushAsync(new ChatPage(selectedChat.Id, _userData));
+                    // Переход на соответствующую страницу чата
+                    await Navigation.PushAsync(new ChatPage(chat.Id, _userData));
                 }
                 catch (Exception ex)
                 {
                     await DisplayAlert("Ошибка", $"Не удалось открыть чат: {ex.Message}", "OK");
                 }
             }
-
-            // Сбрасываем выделение, чтобы можно было снова выбрать тот же элемент
-            ((CollectionView)sender).SelectedItem = null;
         }
     }
 }

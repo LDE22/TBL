@@ -19,11 +19,12 @@ public partial class StatisticsPage : ContentPage
     {
         try
         {
-            // Загрузка статистики модератора по его ID
-            var moderatorId = Preferences.Get("UserId", 0); // Получаем ID модератора
+            var moderatorId = Preferences.Get("UserId", 0);
+
+            // Загружаем статистику с сервера
             Statistics = await _userData.GetModeratorStatisticsAsync(moderatorId);
 
-            // Обновляем значения на интерфейсе
+            // Обновляем интерфейс
             ClosedTicketsLabel.Text = Statistics.ClosedTickets.ToString();
             BlockedProfilesLabel.Text = Statistics.BlockedProfiles.ToString();
             RestrictedProfilesLabel.Text = Statistics.RestrictedProfiles.ToString();
@@ -31,7 +32,7 @@ public partial class StatisticsPage : ContentPage
         }
         catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
-            // Если статистика отсутствует (404), создаем её с нулевыми значениями
+            // Создаём статистику, если её нет
             try
             {
                 var newStats = new ModeratorStats
@@ -43,7 +44,6 @@ public partial class StatisticsPage : ContentPage
                     RejectedTickets = 0
                 };
 
-                // Создаем статистику через API
                 Statistics = await _userData.CreateModeratorStatisticsAsync(newStats);
 
                 // Обновляем интерфейс
@@ -54,12 +54,12 @@ public partial class StatisticsPage : ContentPage
             }
             catch (Exception createEx)
             {
-                await DisplayAlert("Error", $"Failed to create statistics: {createEx.Message}", "OK");
+                await DisplayAlert("Ошибка", $"Не удалось создать статистику: {createEx.Message}", "OK");
             }
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", $"Failed to load statistics: {ex.Message}", "OK");
+            await DisplayAlert("Ошибка", $"Не удалось загрузить статистику: {ex.Message}", "OK");
         }
     }
 }
